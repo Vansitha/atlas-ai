@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, writeFileSync, unlinkSync, openSync, closeSync } from 'node:fs'
+import { existsSync, readFileSync, writeFileSync, unlinkSync, openSync, closeSync, realpathSync } from 'node:fs'
 import { spawn } from 'node:child_process'
 import { dirname, join } from 'node:path'
 import { DAEMON_PID_PATH, DAEMON_HEARTBEAT_PATH, DAEMON_LOG_PATH, findBookmarksPath } from '../storage/paths.js'
@@ -106,8 +106,9 @@ export function startDaemon(): { pid: number; bookmarkFolder: string } {
   }
 
   // Resolve the worker script relative to the currently running binary.
-  // process.argv[1] is always dist/bin/atlas.js regardless of install method.
-  const workerPath = join(dirname(process.argv[1]), 'atlas-worker.js')
+  // realpathSync resolves symlinks (e.g. global npm installs) so dirname
+  // always points to the real dist/bin/ directory, not the bin symlink folder.
+  const workerPath = join(dirname(realpathSync(process.argv[1])), 'atlas-worker.js')
 
   let logFd: number
   try {
