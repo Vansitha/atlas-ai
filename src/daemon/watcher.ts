@@ -1,6 +1,6 @@
 import { writeFileSync } from 'node:fs'
 import { watch } from 'chokidar'
-import { DAEMON_HEARTBEAT_PATH, BROWSER_BOOKMARK_PATHS } from '../storage/paths.js'
+import { DAEMON_HEARTBEAT_PATH, findBookmarksPath } from '../storage/paths.js'
 import { loadConfig } from '../config/loader.js'
 import { parseBookmarkFolder } from './bookmark-parser.js'
 import { findByUrlHash, addEntry } from '../storage/manifest.js'
@@ -46,7 +46,7 @@ export async function startWatcher(): Promise<void> {
     process.exit(1)
   }
 
-  const bookmarksPath = BROWSER_BOOKMARK_PATHS[config.browser]
+  const bookmarksPath = findBookmarksPath(config.browser)
   if (!bookmarksPath) {
     console.error(`[atlas-daemon] No bookmark path for browser: ${config.browser}`)
     process.exit(1)

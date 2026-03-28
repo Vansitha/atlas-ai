@@ -1,7 +1,7 @@
 import { existsSync, readFileSync, writeFileSync, unlinkSync, openSync, closeSync } from 'node:fs'
 import { spawn } from 'node:child_process'
 import { dirname, join } from 'node:path'
-import { DAEMON_PID_PATH, DAEMON_HEARTBEAT_PATH, DAEMON_LOG_PATH, BROWSER_BOOKMARK_PATHS } from '../storage/paths.js'
+import { DAEMON_PID_PATH, DAEMON_HEARTBEAT_PATH, DAEMON_LOG_PATH, findBookmarksPath } from '../storage/paths.js'
 import { loadConfig } from '../config/loader.js'
 import { DaemonError } from '../utils/errors.js'
 
@@ -93,8 +93,8 @@ export function startDaemon(): { pid: number; bookmarkFolder: string } {
     throw new DaemonError('No browser configured. Run atlas init to set up.')
   }
 
-  const bookmarksPath = BROWSER_BOOKMARK_PATHS[config.browser]
-  if (!bookmarksPath || !existsSync(bookmarksPath)) {
+  const bookmarksPath = findBookmarksPath(config.browser)
+  if (!bookmarksPath) {
     throw new DaemonError(
       `Bookmark file not found for ${config.browser}. Is the browser installed and has been opened at least once?`,
     )

@@ -1,3 +1,4 @@
+import { existsSync, readdirSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
 
@@ -19,6 +20,7 @@ const isWindows = process.platform === 'win32'
 const winBase = process.env.LOCALAPPDATA ?? join(homedir(), 'AppData', 'Local')
 const macBase = join(homedir(), 'Library', 'Application Support')
 
+// Default profile paths — used as the first candidate in findBookmarksPath
 export const BROWSER_BOOKMARK_PATHS: Record<string, string> = isWindows
   ? {
       chrome: join(winBase, 'Google', 'Chrome', 'User Data', 'Default', 'Bookmarks'),
@@ -32,3 +34,53 @@ export const BROWSER_BOOKMARK_PATHS: Record<string, string> = isWindows
       arc: join(macBase, 'Arc', 'User Data', 'Default', 'Bookmarks'),
       edge: join(macBase, 'Microsoft Edge', 'Default', 'Bookmarks'),
     }
+
+// Browser root dirs to scan for named profiles when Default doesn't exist
+const BROWSER_PROFILE_ROOTS: Record<string, string> = isWindows
+  ? {
+      chrome: join(winBase, 'Google', 'Chrome', 'User Data'),
+      brave: join(winBase, 'BraveSoftware', 'Brave-Browser', 'User Data'),
+      edge: join(winBase, 'Microsoft', 'Edge', 'User Data'),
+    }
+  : {
+      chrome: join(macBase, 'Google', 'Chrome'),
+      brave: join(macBase, 'BraveSoftware', 'Brave-Browser'),
+      edge: join(macBase, 'Microsoft Edge'),
+    }
+
+/**
+ * Returns the bookmarks file path for the given browser.
+ * Tries the Default profile first, then falls back to the first
+ * named profile directory (e.g. "Profile 1") that contains a Bookmarks file.
+ * Returns null if no bookmarks file can be found.
+ */
+export function findBookmarksPath(browser: string): string | null {
+  const defaultPath = BROWSER_BOOKMARK_PATHS[browser]
+  if (!defaultPath) return null
+  if (existsSync(defaultPath)) return defaultPath
+
+  const profileRoot = BROWSER_PROFILE_ROOTS[browser]
+  if (!profileRoot || !existsSync(profileRoot)) return null
+
+  let entries: string[]
+  try {
+    entries = readdirSync(profileRoot)
+  } catch {
+    return null
+  }
+
+  const profileDirs = entries
+    .filter((name) => /^Profile \d+$/i.test(name))
+    .sort((a, b) => {
+      const numA = parseInt(a.replace(/\D/g, ''), 10)
+      const numB = parseInt(b.replace(/\D/g, ''), 10)
+      return numA - numB
+    })
+
+  for (const dir of profileDirs) {
+    const candidate = join(profileRoot, dir, 'Bookmarks')
+    if (existsSync(candidate)) return candidate
+  }
+
+  return null
+}
