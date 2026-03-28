@@ -9,7 +9,13 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'lcov'],
       include: ['src/**/*.ts'],
-      exclude: ['src/types/**', 'src/index.ts'],
+      exclude: [
+        'src/types/**',
+        'src/index.ts',
+        'src/ai/transport/**',   // requires external CLIs / API keys
+        'src/storage/paths.ts',  // pure constants
+        'src/utils/logger.ts',   // thin wrapper around console
+      ],
       thresholds: {
         statements: 80,
         branches: 80,
