@@ -1,0 +1,44 @@
+[
+  {
+    "kind": "Listing",
+    "data": {
+      "children": [
+        {
+          "kind": "t3",
+          "data": {
+            "title": "How I optimized my Node.js API from 200ms to 20ms response time",
+            "selftext": "I recently went through a major performance optimization on our Node.js API. Here are the key changes I made:\n\n1. Added Redis caching for expensive database queries\n2. Used connection pooling properly\n3. Eliminated N+1 query problems with proper joins",
+            "author": "perf_engineer",
+            "subreddit": "node",
+            "score": 1500,
+            "url": "https://www.reddit.com/r/node/comments/abc123/how_i_optimized",
+            "num_comments": 89
+          }
+        }
+      ]
+    }
+  },
+  {
+    "kind": "Listing",
+    "data": {
+      "children": [
+        {
+          "kind": "t1",
+          "data": {
+            "body": "Great writeup! The Redis caching tip alone is worth it. We saw similar improvements.",
+            "author": "backend_dev",
+            "score": 245
+          }
+        },
+        {
+          "kind": "t1",
+          "data": {
+            "body": "What Redis client are you using? ioredis or the official one?",
+            "author": "curious_dev",
+            "score": 89
+          }
+        }
+      ]
+    }
+  }
+]

@@ -1,0 +1,29 @@
+{
+  "code": 200,
+  "message": "OK",
+  "tweet": {
+    "id": "1234567890",
+    "text": "React Server Components aren't just about performance. The key insight is that they change the mental model entirely.",
+    "author": {
+      "name": "Dan Abramov",
+      "screen_name": "dan_abramov"
+    },
+    "created_at": "2024-01-15T10:00:00Z",
+    "likes": 5000,
+    "retweets": 1200,
+    "thread": [
+      {
+        "id": "1234567891",
+        "text": "With RSC, you can think of your UI as a function of your data, where some parts run on the server and some on the client.",
+        "author": { "name": "Dan Abramov", "screen_name": "dan_abramov" },
+        "created_at": "2024-01-15T10:01:00Z"
+      },
+      {
+        "id": "1234567892",
+        "text": "This means you can fetch data directly in your components without waterfalls, while keeping sensitive logic on the server.",
+        "author": { "name": "Dan Abramov", "screen_name": "dan_abramov" },
+        "created_at": "2024-01-15T10:02:00Z"
+      }
+    ]
+  }
+}
