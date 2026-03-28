@@ -1,0 +1,8 @@
+{
+  "type": "skill",
+  "confidence": 0.95,
+  "reasoning": "This is an actionable how-to guide with code examples for using React hooks",
+  "suggestedTitle": "React Hooks Patterns",
+  "suggestedTags": ["react", "hooks", "javascript", "frontend"],
+  "suggestedSlug": "react-hooks-patterns"
+}

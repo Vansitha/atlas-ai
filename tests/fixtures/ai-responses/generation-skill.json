@@ -1,0 +1,6 @@
+{
+  "markdown": "---\nname: react-hooks-patterns\ndescription: Use when working with React functional components and state management\ntags: [react, hooks, javascript]\n---\n\n# React Hooks Patterns\n\n## When to Activate\n- Working with React functional components\n- Need to manage local component state\n- Handling side effects in components\n\n## Key Patterns\n\n### useState\n```javascript\nconst [count, setCount] = useState(0)\n```\n\n### useEffect\n```javascript\nuseEffect(() => {\n  document.title = `Count: ${count}`\n}, [count])\n```\n\n## Notes\nuseEffect runs after every render by default. Use the dependency array to control when it runs.",
+  "title": "React Hooks Patterns",
+  "description": "Practical patterns for using React hooks in functional components",
+  "tags": ["react", "hooks", "javascript", "frontend"]
+}

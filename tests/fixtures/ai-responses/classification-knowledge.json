@@ -1,0 +1,8 @@
+{
+  "type": "knowledge",
+  "confidence": 0.88,
+  "reasoning": "This is a conceptual discussion about React Server Components rather than a how-to guide",
+  "suggestedTitle": "Why React Server Components Matter",
+  "suggestedTags": ["react", "rsc", "architecture", "frontend"],
+  "suggestedSlug": "why-react-server-components-matter"
+}
