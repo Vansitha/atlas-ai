@@ -93,7 +93,7 @@ export function startDaemon(): { pid: number; bookmarkFolder: string } {
     throw new DaemonError('No browser configured. Run atlas init to set up.')
   }
 
-  const bookmarksPath = findBookmarksPath(config.browser)
+  const bookmarksPath = findBookmarksPath(config.browser, config.browserProfile)
   if (!bookmarksPath) {
     throw new DaemonError(
       `Bookmark file not found for ${config.browser}. Is the browser installed and has been opened at least once?`,
@@ -112,7 +112,7 @@ export function startDaemon(): { pid: number; bookmarkFolder: string } {
 
   let logFd: number
   try {
-    logFd = openSync(DAEMON_LOG_PATH, 'a')
+    logFd = openSync(DAEMON_LOG_PATH, 'w') // 'w' truncates — fresh log on every start
   } catch {
     throw new DaemonError(`Could not open log file at ${DAEMON_LOG_PATH}`)
   }

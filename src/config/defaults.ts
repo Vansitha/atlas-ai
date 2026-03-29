@@ -5,6 +5,7 @@ export function defaultConfig(): AtlasConfig {
   return {
     version: 1,
     browser: null,
+    browserProfile: null,
     codingTools: [],
     aiProvider: null,
     daemon: {

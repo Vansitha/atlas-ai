@@ -1,13 +1,12 @@
-import { existsSync } from 'node:fs'
 import { execSync } from 'node:child_process'
-import { BROWSER_BOOKMARK_PATHS } from '../storage/paths.js'
+import { findBookmarksPath } from '../storage/paths.js'
 import { getAllProviders } from '../providers/registry.js'
 import type { BrowserChoice, AiProviderType, CodingTool } from '../types/index.js'
 
+const ALL_BROWSERS: BrowserChoice[] = ['chrome', 'brave', 'arc', 'edge']
+
 export function detectBrowsers(): BrowserChoice[] {
-  return Object.entries(BROWSER_BOOKMARK_PATHS)
-    .filter(([, path]) => existsSync(path))
-    .map(([browser]) => browser as BrowserChoice)
+  return ALL_BROWSERS.filter((browser) => findBookmarksPath(browser) !== null)
 }
 
 export function detectCodingTools(): CodingTool[] {

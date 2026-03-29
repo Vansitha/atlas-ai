@@ -72,13 +72,14 @@ export const htmlExtractor: ContentExtractor = {
       $('meta[property="og:description"]').attr('content') ||
       null
 
-    // Extract main content in priority order
+    // Extract main content in priority order.
+    // Cheerio objects are always truthy so we must check .length, not use ||.
     const contentEl =
-      $('article').first() ||
-      $('main').first() ||
-      $('[role="main"]').first() ||
-      $('.content, #content, .post, #post').first() ||
-      $('body')
+      $('article').first().length > 0 ? $('article').first()
+      : $('main').first().length > 0 ? $('main').first()
+      : $('[role="main"]').first().length > 0 ? $('[role="main"]').first()
+      : $('.content, #content, .post, #post').first().length > 0 ? $('.content, #content, .post, #post').first()
+      : $('body')
 
     const body = contentEl
       .text()
@@ -86,17 +87,29 @@ export const htmlExtractor: ContentExtractor = {
       .trim()
       .slice(0, MAX_BODY_LENGTH)
 
-    if (body.length < 50) {
-      throw new ExtractionError(
-        `Extracted content too short (${body.length} chars) — page may require JavaScript`,
-        url.toString(),
-        'html',
-      )
-    }
-
     const metadata: Record<string, string> = {}
     if (author) metadata['author'] = author
     if (description) metadata['description'] = description
+
+    if (body.length < 50) {
+      // JS-rendered page — fall back to whatever metadata we have
+      const fallbackBody = [description, title, url.toString()].filter(Boolean).join('\n\n')
+      if (fallbackBody.length < 20) {
+        throw new ExtractionError(
+          `Extracted content too short (${body.length} chars) — page may require JavaScript`,
+          url.toString(),
+          'html',
+        )
+      }
+      return {
+        url: url.toString(),
+        title: title.slice(0, 200),
+        body: fallbackBody,
+        metadata,
+        extractedAt: new Date().toISOString(),
+        extractorName: 'html',
+      }
+    }
 
     return {
       url: url.toString(),

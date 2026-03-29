@@ -1,4 +1,4 @@
-import { existsSync, readdirSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
 
@@ -48,18 +48,158 @@ const BROWSER_PROFILE_ROOTS: Record<string, string> = isWindows
       edge: join(macBase, 'Microsoft Edge'),
     }
 
+export interface BrowserProfile {
+  dir: string
+  name: string
+}
+
+/**
+ * Lists all browser profiles that have a Bookmarks file.
+ * Reads each profile's Preferences file to get the human-readable name.
+ */
+export function listBrowserProfiles(browser: string): BrowserProfile[] {
+  const profileRoot = BROWSER_PROFILE_ROOTS[browser]
+  if (!profileRoot || !existsSync(profileRoot)) return []
+
+  let entries: string[]
+  try {
+    entries = readdirSync(profileRoot)
+  } catch {
+    return []
+  }
+
+  const results: BrowserProfile[] = []
+
+  for (const dir of entries) {
+    const bookmarksFile = join(profileRoot, dir, 'Bookmarks')
+    if (!existsSync(bookmarksFile)) continue
+
+    let profileName = dir
+    const prefsFile = join(profileRoot, dir, 'Preferences')
+    if (existsSync(prefsFile)) {
+      try {
+        const prefs = JSON.parse(readFileSync(prefsFile, 'utf-8')) as Record<string, unknown>
+        const name = (prefs?.profile as Record<string, unknown>)?.name
+        if (typeof name === 'string' && name.trim()) profileName = name.trim()
+      } catch {}
+    }
+
+    results.push({ dir, name: profileName })
+  }
+
+  return results.sort((a, b) => {
+    if (a.dir === 'Default') return -1
+    if (b.dir === 'Default') return 1
+    const numA = parseInt(a.dir.replace(/\D/g, ''), 10)
+    const numB = parseInt(b.dir.replace(/\D/g, ''), 10)
+    return (isNaN(numA) ? 999 : numA) - (isNaN(numB) ? 999 : numB)
+  })
+}
+
+interface ChromeBookmarkNode {
+  id: string
+  name: string
+  type: 'folder' | 'url'
+  children?: ChromeBookmarkNode[]
+  date_added?: string
+  date_modified?: string
+}
+
+interface ChromeBookmarksFile {
+  checksum: string
+  roots: {
+    bookmark_bar: ChromeBookmarkNode
+    other: ChromeBookmarkNode
+    synced: ChromeBookmarkNode
+  }
+  version: number
+}
+
+function findMaxBookmarkId(node: ChromeBookmarkNode): number {
+  const id = parseInt(node.id, 10)
+  let max = isNaN(id) ? 0 : id
+  for (const child of node.children ?? []) {
+    max = Math.max(max, findMaxBookmarkId(child))
+  }
+  return max
+}
+
+function bookmarkFolderExists(node: ChromeBookmarkNode, name: string): boolean {
+  for (const child of node.children ?? []) {
+    if (child.type === 'folder' && child.name.toLowerCase() === name.toLowerCase()) return true
+    if (bookmarkFolderExists(child, name)) return true
+  }
+  return false
+}
+
+/**
+ * Creates the named folder in Chrome's bookmark bar if it doesn't already exist.
+ * Returns true if created, false if it already existed or could not be written.
+ * Chrome will recalculate the checksum on its next write.
+ */
+export function ensureBookmarkFolder(bookmarksPath: string, folderName: string): boolean {
+  let raw: string
+  try {
+    raw = readFileSync(bookmarksPath, 'utf-8')
+  } catch {
+    return false
+  }
+
+  let data: ChromeBookmarksFile
+  try {
+    data = JSON.parse(raw) as ChromeBookmarksFile
+  } catch {
+    return false
+  }
+
+  const roots = [data.roots.bookmark_bar, data.roots.other, data.roots.synced]
+  if (roots.some((root) => bookmarkFolderExists(root, folderName))) return false
+
+  const maxId = Math.max(...roots.map(findMaxBookmarkId))
+
+  // Chrome timestamps: microseconds since 1601-01-01
+  const MS_EPOCH_DIFF = 11644473600000n
+  const timestamp = ((BigInt(Date.now()) + MS_EPOCH_DIFF) * 1000n).toString()
+
+  const newFolder: ChromeBookmarkNode = {
+    children: [],
+    date_added: timestamp,
+    date_modified: timestamp,
+    id: String(maxId + 1),
+    name: folderName,
+    type: 'folder',
+  }
+
+  data.roots.bookmark_bar.children = [...(data.roots.bookmark_bar.children ?? []), newFolder]
+  data.checksum = '' // Chrome recalculates on next write
+
+  try {
+    writeFileSync(bookmarksPath, JSON.stringify(data, null, 3), 'utf-8')
+    return true
+  } catch {
+    return false
+  }
+}
+
 /**
  * Returns the bookmarks file path for the given browser.
- * Tries the Default profile first, then falls back to the first
+ * If profileDir is provided, uses that profile directory directly.
+ * Otherwise tries the Default profile first, then falls back to the first
  * named profile directory (e.g. "Profile 1") that contains a Bookmarks file.
  * Returns null if no bookmarks file can be found.
  */
-export function findBookmarksPath(browser: string): string | null {
+export function findBookmarksPath(browser: string, profileDir?: string | null): string | null {
+  const profileRoot = BROWSER_PROFILE_ROOTS[browser]
+
+  if (profileDir && profileRoot) {
+    const candidate = join(profileRoot, profileDir, 'Bookmarks')
+    if (existsSync(candidate)) return candidate
+  }
+
   const defaultPath = BROWSER_BOOKMARK_PATHS[browser]
   if (!defaultPath) return null
   if (existsSync(defaultPath)) return defaultPath
 
-  const profileRoot = BROWSER_PROFILE_ROOTS[browser]
   if (!profileRoot || !existsSync(profileRoot)) return null
 
   let entries: string[]

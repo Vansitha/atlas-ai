@@ -2,7 +2,7 @@ import { existsSync, mkdirSync } from 'node:fs'
 import * as clack from '@clack/prompts'
 import type { Command } from 'commander'
 import { loadConfig, updateConfig } from '../../config/loader.js'
-import { ATLAS_HOME, CONFIG_PATH } from '../../storage/paths.js'
+import { ATLAS_HOME, CONFIG_PATH, listBrowserProfiles, findBookmarksPath, ensureBookmarkFolder } from '../../storage/paths.js'
 import { detectBrowsers, detectCodingTools, detectAiProviders } from '../detect.js'
 import { syncAll } from '../../providers/registry.js'
 import { intro, outro, fail } from '../ui.js'
@@ -65,6 +65,62 @@ export async function runInitWizard(): Promise<void> {
     return
   }
 
+  // Step 1b: Profile selection (for browsers with named profiles)
+  let browserProfile: string | null = null
+
+  if (browserChoice !== 'skip') {
+    const profiles = listBrowserProfiles(browserChoice as string)
+
+    if (profiles.length > 1) {
+      const profileOptions = profiles.map((p) => ({
+        value: p.dir,
+        label: p.name,
+        hint: p.dir,
+      }))
+
+      const profileChoice = await clack.select<string>({
+        message: `Which ${browserChoice} profile should Atlas watch?`,
+        options: profileOptions,
+      })
+
+      if (clack.isCancel(profileChoice)) {
+        savePartialAndExit({ browser: browserChoice as BrowserChoice })
+        return
+      }
+
+      browserProfile = profileChoice as string
+    } else if (profiles.length === 1) {
+      browserProfile = profiles[0].dir
+    }
+  }
+
+  // Step 1c: Bookmark folder name
+  const folderNameInput = await clack.text({
+    message: 'What should the watched bookmark folder be called?',
+    placeholder: 'Atlas',
+    defaultValue: 'Atlas',
+  })
+
+  if (clack.isCancel(folderNameInput)) {
+    savePartialAndExit({ browser: browserChoice as BrowserChoice, browserProfile })
+    return
+  }
+
+  const bookmarkFolder = (folderNameInput as string).trim() || 'Atlas'
+
+  // Create the bookmark folder in the browser if it doesn't exist
+  if (browserChoice !== 'skip') {
+    const bookmarksPath = findBookmarksPath(browserChoice as string, browserProfile)
+    if (bookmarksPath) {
+      const created = ensureBookmarkFolder(bookmarksPath, bookmarkFolder)
+      if (created) {
+        clack.log.success(`Created "${bookmarkFolder}" bookmark folder in your browser's bookmark bar.`)
+      } else {
+        clack.log.info(`"${bookmarkFolder}" bookmark folder already exists.`)
+      }
+    }
+  }
+
   // Step 2: Coding tools
   const detectedTools = detectCodingTools()
 
@@ -93,7 +149,7 @@ export async function runInitWizard(): Promise<void> {
     const spin = clack.spinner()
     spin.start('Running initial sync...')
     try {
-      updateConfig({ browser: browserChoice as BrowserChoice, codingTools: selectedTools })
+      updateConfig({ browser: browserChoice as BrowserChoice, browserProfile, codingTools: selectedTools })
       await syncAll()
       spin.stop('Initial sync complete.')
     } catch {
@@ -143,8 +199,14 @@ export async function runInitWizard(): Promise<void> {
 
   const finalConfig = updateConfig({
     browser: browserChoice as BrowserChoice,
+    browserProfile,
     codingTools: selectedTools,
     aiProvider,
+    daemon: {
+      enabled: false,
+      bookmarkFolder,
+      debounceMs: 2000,
+    },
   })
 
   clack.note(

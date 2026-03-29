@@ -46,7 +46,7 @@ export async function startWatcher(): Promise<void> {
     process.exit(1)
   }
 
-  const bookmarksPath = findBookmarksPath(config.browser)
+  const bookmarksPath = findBookmarksPath(config.browser, config.browserProfile)
   if (!bookmarksPath) {
     console.error(`[atlas-daemon] No bookmark path for browser: ${config.browser}`)
     process.exit(1)
