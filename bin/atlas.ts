@@ -13,6 +13,8 @@ import { registerProvidersCommand } from '../src/cli/commands/providers.js'
 import { registerInitCommand } from '../src/cli/commands/init.js'
 import { registerSetupCommand } from '../src/cli/commands/setup.js'
 import { registerDaemonCommand } from '../src/cli/commands/daemon.js'
+import { registerCompletionCommand } from '../src/cli/commands/completion.js'
+import { registerUninstallCommand } from '../src/cli/commands/uninstall.js'
 
 const program = new Command()
 
@@ -30,6 +32,8 @@ registerProvidersCommand(program)
 registerInitCommand(program)
 registerSetupCommand(program)
 registerDaemonCommand(program)
+registerCompletionCommand(program)
+registerUninstallCommand(program)
 
 program.parseAsync(process.argv).catch((err) => {
   console.error(err instanceof Error ? err.message : String(err))
