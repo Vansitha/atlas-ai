@@ -1,6 +1,8 @@
+import { existsSync, createReadStream, statSync, watchFile } from 'node:fs'
 import type { Command } from 'commander'
 import { startDaemon, stopDaemon, getDaemonStatus } from '../../daemon/process-manager.js'
 import { startWatcher } from '../../daemon/watcher.js'
+import { DAEMON_LOG_PATH } from '../../storage/paths.js'
 import { intro, outro, fail } from '../ui.js'
 
 function formatHeartbeatAge(seconds: number | null): string {
@@ -71,6 +73,35 @@ export function registerDaemonCommand(program: Command): void {
       console.log('  Log:     ~/.ai-knowledge/.daemon.log')
 
       outro('')
+    })
+
+  daemon
+    .command('logs')
+    .description('Tail the daemon log (like tail -f)')
+    .action(() => {
+      if (!existsSync(DAEMON_LOG_PATH)) {
+        console.error('No daemon log found. Has the daemon been started?')
+        process.exit(1)
+      }
+
+      // Stream existing content first
+      const stream = createReadStream(DAEMON_LOG_PATH, { encoding: 'utf-8' })
+      stream.pipe(process.stdout)
+
+      // Then watch for new content
+      let size = 0
+      stream.on('end', () => {
+        size = statSync(DAEMON_LOG_PATH).size
+
+        watchFile(DAEMON_LOG_PATH, { interval: 500 }, (curr) => {
+          if (curr.size <= size) return
+          const tail = createReadStream(DAEMON_LOG_PATH, { encoding: 'utf-8', start: size })
+          tail.pipe(process.stdout)
+          size = curr.size
+        })
+      })
+
+      process.on('SIGINT', () => process.exit(0))
     })
 
   daemon

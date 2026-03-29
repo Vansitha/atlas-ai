@@ -40,6 +40,7 @@ _atlas() {
             'start:Start the daemon in the background'
             'stop:Stop the daemon'
             'status:Show daemon status'
+            'logs:Tail the daemon log'
           )
           _describe 'daemon command' daemon_cmds
           ;;
@@ -72,7 +73,7 @@ _atlas_completion() {
 
   case "\${COMP_WORDS[1]}" in
     daemon)
-      COMPREPLY=(\$(compgen -W "start stop status" -- "\${cur}"))
+      COMPREPLY=(\$(compgen -W "start stop status logs" -- "\${cur}"))
       ;;
     providers)
       COMPREPLY=(\$(compgen -W "status" -- "\${cur}"))
