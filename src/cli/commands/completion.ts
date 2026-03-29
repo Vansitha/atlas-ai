@@ -7,8 +7,6 @@ function detectShell(): string {
 }
 
 const ZSH_COMPLETION = `
-#compdef atlas
-
 _atlas() {
   local state
 
@@ -56,7 +54,7 @@ _atlas() {
   esac
 }
 
-_atlas "$@"
+compdef _atlas atlas
 `.trim()
 
 const BASH_COMPLETION = `
