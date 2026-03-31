@@ -17,7 +17,8 @@ vi.mock('../../../../src/cli/ui.js', () => ({
   fail: vi.fn(),
 }))
 
-const { startDaemon, stopDaemon, getDaemonStatus } = await import('../../../../src/daemon/process-manager.js')
+const { startDaemon, stopDaemon, getDaemonStatus } =
+  await import('../../../../src/daemon/process-manager.js')
 const { fail, outro } = await import('../../../../src/cli/ui.js')
 const { registerDaemonCommand } = await import('../../../../src/cli/commands/daemon.js')
 
@@ -45,7 +46,9 @@ describe('atlas daemon start', () => {
   })
 
   it('calls fail and exits on DaemonError', async () => {
-    vi.mocked(startDaemon).mockImplementation(() => { throw new Error('No browser configured') })
+    vi.mocked(startDaemon).mockImplementation(() => {
+      throw new Error('No browser configured')
+    })
     const exitSpy = vi.spyOn(process, 'exit').mockImplementation(() => undefined as never)
 
     await makeProgram().parseAsync(['node', 'atlas', 'daemon', 'start'])

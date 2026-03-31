@@ -28,7 +28,8 @@ vi.mock('node:os', async (importOriginal) => {
   return { ...actual, homedir: () => tempDir }
 })
 
-const { cursorProvider, removeCursorEntry } = await import('../../../src/providers/strategies/cursor.js')
+const { cursorProvider, removeCursorEntry } =
+  await import('../../../src/providers/strategies/cursor.js')
 
 const skillEntry: StoredEntry = {
   slug: 'react-hooks',

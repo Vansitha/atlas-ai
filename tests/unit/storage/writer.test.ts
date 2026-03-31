@@ -95,7 +95,12 @@ describe('writeEntry', () => {
   })
 
   it('respects nameOverride for slug generation', () => {
-    const result = writeEntry('https://example.com/react', generation, classification, 'My Custom Hook')
+    const result = writeEntry(
+      'https://example.com/react',
+      generation,
+      classification,
+      'My Custom Hook',
+    )
     expect(result.slug).toBe('my-custom-hook')
   })
 

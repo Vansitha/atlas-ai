@@ -23,20 +23,12 @@ export const llmsTxtExtractor: ContentExtractor = {
       })
 
       if (!response.ok) {
-        throw new ExtractionError(
-          `llms.txt not found at ${llmsUrl}`,
-          url.toString(),
-          'llms-txt',
-        )
+        throw new ExtractionError(`llms.txt not found at ${llmsUrl}`, url.toString(), 'llms-txt')
       }
 
       const contentType = response.headers.get('content-type') ?? ''
       if (!contentType.includes('text/')) {
-        throw new ExtractionError(
-          'llms.txt is not text content',
-          url.toString(),
-          'llms-txt',
-        )
+        throw new ExtractionError('llms.txt is not text content', url.toString(), 'llms-txt')
       }
 
       const text = await response.text()

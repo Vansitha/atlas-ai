@@ -10,7 +10,8 @@ const instructionsPath = join(githubDir, 'copilot-instructions.md')
 
 // Mock process.cwd() to return tempDir so copilot provider uses our temp dir
 vi.mock('../../../src/providers/strategies/copilot.js', async (importOriginal) => {
-  const original = await importOriginal<typeof import('../../../src/providers/strategies/copilot.js')>()
+  const original =
+    await importOriginal<typeof import('../../../src/providers/strategies/copilot.js')>()
   return original
 })
 

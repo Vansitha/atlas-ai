@@ -28,7 +28,8 @@ vi.mock('node:os', async (importOriginal) => {
   return { ...actual, homedir: () => tempDir }
 })
 
-const { windsurfProvider, removeWindsurfEntry } = await import('../../../src/providers/strategies/windsurf.js')
+const { windsurfProvider, removeWindsurfEntry } =
+  await import('../../../src/providers/strategies/windsurf.js')
 
 const skillEntry: StoredEntry = {
   slug: 'react-hooks',

@@ -41,7 +41,12 @@ export const cursorProvider: SyncProvider = {
 
   async verify(): Promise<SyncStatus> {
     if (!this.detected()) {
-      return { provider: 'cursor', configured: false, healthy: false, details: 'Cursor not found (~/.cursor missing)' }
+      return {
+        provider: 'cursor',
+        configured: false,
+        healthy: false,
+        details: 'Cursor not found (~/.cursor missing)',
+      }
     }
     return { provider: 'cursor', configured: true, healthy: true, details: 'Cursor detected' }
   },

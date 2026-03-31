@@ -45,9 +45,7 @@ vi.mock('../../../../src/daemon/process-manager.js', () => ({
 vi.mock('../../../../src/cli/detect.js', () => ({
   detectBrowsers: vi.fn(() => ['chrome']),
   detectCodingTools: vi.fn(() => ['claude-code']),
-  detectAiProviders: vi.fn(() => [
-    { value: 'claude-cli', label: 'Claude CLI', hint: 'detected' },
-  ]),
+  detectAiProviders: vi.fn(() => [{ value: 'claude-cli', label: 'Claude CLI', hint: 'detected' }]),
   detectKnowledgeApps: vi.fn(() => ['vscode']),
 }))
 
@@ -93,7 +91,10 @@ function makeProgram() {
 beforeEach(() => {
   vi.clearAllMocks()
   vi.mocked(clack.isCancel).mockReturnValue(false)
-  vi.mocked(clack.select).mockResolvedValueOnce('chrome').mockResolvedValueOnce('claude-cli').mockResolvedValueOnce('vscode')
+  vi.mocked(clack.select)
+    .mockResolvedValueOnce('chrome')
+    .mockResolvedValueOnce('claude-cli')
+    .mockResolvedValueOnce('vscode')
   vi.mocked(clack.multiselect).mockResolvedValue(['claude-code'])
   vi.mocked(clack.text).mockResolvedValue('Atlas')
   vi.mocked(existsSync).mockReturnValue(false)
@@ -107,7 +108,10 @@ describe('atlas init', () => {
 
   it('calls updateConfig with selected browser and tools', async () => {
     vi.mocked(clack.select).mockReset()
-    vi.mocked(clack.select).mockResolvedValueOnce('arc').mockResolvedValueOnce('claude-cli').mockResolvedValueOnce('vscode')
+    vi.mocked(clack.select)
+      .mockResolvedValueOnce('arc')
+      .mockResolvedValueOnce('claude-cli')
+      .mockResolvedValueOnce('vscode')
     vi.mocked(clack.multiselect).mockResolvedValue(['cursor'])
 
     await runInitWizard()
@@ -119,7 +123,10 @@ describe('atlas init', () => {
 
   it('calls updateConfig with selected ai provider', async () => {
     vi.mocked(clack.select).mockReset()
-    vi.mocked(clack.select).mockResolvedValueOnce('chrome').mockResolvedValueOnce('anthropic-sdk').mockResolvedValueOnce('vscode')
+    vi.mocked(clack.select)
+      .mockResolvedValueOnce('chrome')
+      .mockResolvedValueOnce('anthropic-sdk')
+      .mockResolvedValueOnce('vscode')
     vi.mocked(clack.multiselect).mockResolvedValue([])
 
     await runInitWizard()
@@ -131,19 +138,23 @@ describe('atlas init', () => {
 
   it('sets aiProvider to null when skip is selected', async () => {
     vi.mocked(clack.select).mockReset()
-    vi.mocked(clack.select).mockResolvedValueOnce('skip').mockResolvedValueOnce('skip').mockResolvedValueOnce('skip')
+    vi.mocked(clack.select)
+      .mockResolvedValueOnce('skip')
+      .mockResolvedValueOnce('skip')
+      .mockResolvedValueOnce('skip')
     vi.mocked(clack.multiselect).mockResolvedValue([])
 
     await runInitWizard()
 
-    expect(updateConfig).toHaveBeenCalledWith(
-      expect.objectContaining({ aiProvider: null }),
-    )
+    expect(updateConfig).toHaveBeenCalledWith(expect.objectContaining({ aiProvider: null }))
   })
 
   it('shows warning when no AI provider selected', async () => {
     vi.mocked(clack.select).mockReset()
-    vi.mocked(clack.select).mockResolvedValueOnce('skip').mockResolvedValueOnce('skip').mockResolvedValueOnce('skip')
+    vi.mocked(clack.select)
+      .mockResolvedValueOnce('skip')
+      .mockResolvedValueOnce('skip')
+      .mockResolvedValueOnce('skip')
     vi.mocked(clack.multiselect).mockResolvedValue([])
 
     await runInitWizard()

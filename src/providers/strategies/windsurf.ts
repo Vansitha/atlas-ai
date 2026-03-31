@@ -41,7 +41,12 @@ export const windsurfProvider: SyncProvider = {
 
   async verify(): Promise<SyncStatus> {
     if (!this.detected()) {
-      return { provider: 'windsurf', configured: false, healthy: false, details: 'Windsurf not found (~/.codeium/windsurf missing)' }
+      return {
+        provider: 'windsurf',
+        configured: false,
+        healthy: false,
+        details: 'Windsurf not found (~/.codeium/windsurf missing)',
+      }
     }
     return { provider: 'windsurf', configured: true, healthy: true, details: 'Windsurf detected' }
   },

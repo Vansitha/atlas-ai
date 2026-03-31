@@ -8,22 +8,29 @@ const redditFixture = JSON.parse(
 )
 
 function mockFetch(data: unknown, status = 200) {
-  vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
-    ok: status >= 200 && status < 300,
-    status,
-    json: () => Promise.resolve(data),
-  }))
+  vi.stubGlobal(
+    'fetch',
+    vi.fn().mockResolvedValue({
+      ok: status >= 200 && status < 300,
+      status,
+      json: () => Promise.resolve(data),
+    }),
+  )
 }
 
 beforeEach(() => vi.restoreAllMocks())
 
 describe('redditExtractor', () => {
   it('canHandle returns true for reddit.com', () => {
-    expect(redditExtractor.canHandle(new URL('https://www.reddit.com/r/node/comments/abc/title'))).toBe(true)
+    expect(
+      redditExtractor.canHandle(new URL('https://www.reddit.com/r/node/comments/abc/title')),
+    ).toBe(true)
   })
 
   it('canHandle returns true for old.reddit.com', () => {
-    expect(redditExtractor.canHandle(new URL('https://old.reddit.com/r/node/comments/abc'))).toBe(true)
+    expect(redditExtractor.canHandle(new URL('https://old.reddit.com/r/node/comments/abc'))).toBe(
+      true,
+    )
   })
 
   it('canHandle returns false for other URLs', () => {

@@ -25,11 +25,10 @@ export const opencodeCliTransport: AITransport = {
   async send(prompt: string): Promise<string> {
     logger.debug('Sending prompt via opencode CLI')
     try {
-      const { stdout, stderr } = await execFileAsync(
-        'opencode',
-        ['run', '--print', prompt],
-        { timeout: TIMEOUT_MS, maxBuffer: 10 * 1024 * 1024 },
-      )
+      const { stdout, stderr } = await execFileAsync('opencode', ['run', '--print', prompt], {
+        timeout: TIMEOUT_MS,
+        maxBuffer: 10 * 1024 * 1024,
+      })
       if (stderr) logger.debug(`opencode CLI stderr: ${stderr}`)
       return stdout.trim()
     } catch (err) {

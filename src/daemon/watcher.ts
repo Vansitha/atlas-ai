@@ -22,7 +22,10 @@ function writeHeartbeat(): void {
   }
 }
 
-async function captureUrl(url: string, transport: Awaited<ReturnType<typeof resolveTransport>>): Promise<void> {
+async function captureUrl(
+  url: string,
+  transport: Awaited<ReturnType<typeof resolveTransport>>,
+): Promise<void> {
   try {
     const content = await extractContent(url)
     const classification = await classify(transport, content)
@@ -102,7 +105,9 @@ export async function startWatcher(): Promise<void> {
       try {
         transport = await resolveTransport()
       } catch (err) {
-        console.error(`[atlas-daemon] No AI provider: ${err instanceof Error ? err.message : String(err)}`)
+        console.error(
+          `[atlas-daemon] No AI provider: ${err instanceof Error ? err.message : String(err)}`,
+        )
         return
       }
 
@@ -123,7 +128,10 @@ export async function startWatcher(): Promise<void> {
 
   const shutdown = (): void => {
     clearInterval(heartbeatTimer)
-    watcher.close().then(() => process.exit(0)).catch(() => process.exit(1))
+    watcher
+      .close()
+      .then(() => process.exit(0))
+      .catch(() => process.exit(1))
   }
 
   process.on('SIGTERM', shutdown)

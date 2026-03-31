@@ -46,9 +46,7 @@ export async function generate(
     } catch (err) {
       if (attempt === 2) {
         const message = err instanceof Error ? err.message : String(err)
-        throw new ClassificationError(
-          `Generation failed after 2 attempts: ${message}`,
-        )
+        throw new ClassificationError(`Generation failed after 2 attempts: ${message}`)
       }
       logger.debug(`Generation attempt ${attempt} failed, retrying...`)
     }

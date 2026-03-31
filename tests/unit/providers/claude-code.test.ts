@@ -28,7 +28,8 @@ vi.mock('node:os', async (importOriginal) => {
   return { ...actual, homedir: () => tempDir }
 })
 
-const { claudeCodeProvider, removeClaudeCodeEntry } = await import('../../../src/providers/strategies/claude-code.js')
+const { claudeCodeProvider, removeClaudeCodeEntry } =
+  await import('../../../src/providers/strategies/claude-code.js')
 
 const skillEntry: StoredEntry = {
   slug: 'react-hooks',

@@ -21,7 +21,12 @@ vi.mock('../../../src/providers/strategies/claude-code.js', () => ({
     name: 'claude-code',
     detected: vi.fn(() => true),
     sync: vi.fn(async () => ({ provider: 'claude-code', entriesSynced: 0, errors: [] })),
-    verify: vi.fn(async () => ({ provider: 'claude-code', configured: true, healthy: true, details: 'ok' })),
+    verify: vi.fn(async () => ({
+      provider: 'claude-code',
+      configured: true,
+      healthy: true,
+      details: 'ok',
+    })),
     cleanup: vi.fn(async () => {}),
   },
 }))
@@ -31,7 +36,12 @@ vi.mock('../../../src/providers/strategies/cursor.js', () => ({
     name: 'cursor',
     detected: vi.fn(() => false),
     sync: vi.fn(async () => ({ provider: 'cursor', entriesSynced: 0, errors: [] })),
-    verify: vi.fn(async () => ({ provider: 'cursor', configured: false, healthy: false, details: 'not found' })),
+    verify: vi.fn(async () => ({
+      provider: 'cursor',
+      configured: false,
+      healthy: false,
+      details: 'not found',
+    })),
     cleanup: vi.fn(async () => {}),
   },
 }))
@@ -41,7 +51,12 @@ vi.mock('../../../src/providers/strategies/copilot.js', () => ({
     name: 'copilot',
     detected: vi.fn(() => false),
     sync: vi.fn(async () => ({ provider: 'copilot', entriesSynced: 0, errors: [] })),
-    verify: vi.fn(async () => ({ provider: 'copilot', configured: false, healthy: false, details: 'not found' })),
+    verify: vi.fn(async () => ({
+      provider: 'copilot',
+      configured: false,
+      healthy: false,
+      details: 'not found',
+    })),
     cleanup: vi.fn(async () => {}),
   },
 }))
@@ -51,7 +66,12 @@ vi.mock('../../../src/providers/strategies/windsurf.js', () => ({
     name: 'windsurf',
     detected: vi.fn(() => false),
     sync: vi.fn(async () => ({ provider: 'windsurf', entriesSynced: 0, errors: [] })),
-    verify: vi.fn(async () => ({ provider: 'windsurf', configured: false, healthy: false, details: 'not found' })),
+    verify: vi.fn(async () => ({
+      provider: 'windsurf',
+      configured: false,
+      healthy: false,
+      details: 'not found',
+    })),
     cleanup: vi.fn(async () => {}),
   },
 }))
@@ -61,7 +81,12 @@ vi.mock('../../../src/providers/strategies/opencode.js', () => ({
     name: 'opencode',
     detected: vi.fn(() => false),
     sync: vi.fn(async () => ({ provider: 'opencode', entriesSynced: 0, errors: [] })),
-    verify: vi.fn(async () => ({ provider: 'opencode', configured: false, healthy: false, details: 'not found' })),
+    verify: vi.fn(async () => ({
+      provider: 'opencode',
+      configured: false,
+      healthy: false,
+      details: 'not found',
+    })),
     cleanup: vi.fn(async () => {}),
   },
 }))
@@ -70,7 +95,13 @@ vi.mock('../../../src/utils/logger.js', () => ({
   logger: { warn: vi.fn(), debug: vi.fn(), error: vi.fn(), info: vi.fn() },
 }))
 
-import { getAllProviders, detectProviders, getProvider, syncAll, verifyAll } from '../../../src/providers/registry.js'
+import {
+  getAllProviders,
+  detectProviders,
+  getProvider,
+  syncAll,
+  verifyAll,
+} from '../../../src/providers/registry.js'
 
 beforeEach(() => {
   vi.clearAllMocks()

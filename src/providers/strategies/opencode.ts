@@ -41,7 +41,12 @@ export const opencodeProvider: SyncProvider = {
 
   async verify(): Promise<SyncStatus> {
     if (!this.detected()) {
-      return { provider: 'opencode', configured: false, healthy: false, details: 'OpenCode not found (~/.opencode missing)' }
+      return {
+        provider: 'opencode',
+        configured: false,
+        healthy: false,
+        details: 'OpenCode not found (~/.opencode missing)',
+      }
     }
     return { provider: 'opencode', configured: true, healthy: true, details: 'OpenCode detected' }
   },

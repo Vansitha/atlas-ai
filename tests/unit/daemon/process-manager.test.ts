@@ -28,10 +28,12 @@ vi.mock('../../../src/config/loader.js', () => ({
   loadConfig: vi.fn(),
 }))
 
-const { existsSync, readFileSync, writeFileSync, unlinkSync, openSync, closeSync } = await import('node:fs')
+const { existsSync, readFileSync, writeFileSync, unlinkSync, openSync, closeSync } =
+  await import('node:fs')
 const { spawn } = await import('node:child_process')
 const { loadConfig } = await import('../../../src/config/loader.js')
-const { getDaemonStatus, stopDaemon, startDaemon } = await import('../../../src/daemon/process-manager.js')
+const { getDaemonStatus, stopDaemon, startDaemon } =
+  await import('../../../src/daemon/process-manager.js')
 
 const mockExistsSync = vi.mocked(existsSync)
 const mockReadFileSync = vi.mocked(readFileSync)
@@ -239,8 +241,8 @@ describe('startDaemon', () => {
     // First call to existsSync: bookmarks file check (true)
     // Then getDaemonStatus internals: no PID file (false)
     mockExistsSync
-      .mockReturnValueOnce(true)  // bookmarks file exists
-      .mockReturnValue(false)     // no PID file (not running)
+      .mockReturnValueOnce(true) // bookmarks file exists
+      .mockReturnValue(false) // no PID file (not running)
 
     const result = startDaemon()
 
@@ -259,9 +261,7 @@ describe('startDaemon', () => {
     const config = { ...baseConfig, daemon: { ...baseConfig.daemon, bookmarkFolder: 'MyCaptures' } }
     mockLoadConfig.mockReturnValue(config)
 
-    mockExistsSync
-      .mockReturnValueOnce(true)
-      .mockReturnValue(false)
+    mockExistsSync.mockReturnValueOnce(true).mockReturnValue(false)
 
     const result = startDaemon()
     expect(result.bookmarkFolder).toBe('MyCaptures')

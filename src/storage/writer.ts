@@ -54,9 +54,7 @@ export function writeEntry(
 
   // Merge frontmatter with the AI-generated markdown body
   // Strip any frontmatter the AI may have included
-  const bodyOnly = generation.markdown
-    .replace(/^---[\s\S]*?---\n*/m, '')
-    .trim()
+  const bodyOnly = generation.markdown.replace(/^---[\s\S]*?---\n*/m, '').trim()
 
   const fullContent = `${frontmatterYaml}${bodyOnly}\n`
 

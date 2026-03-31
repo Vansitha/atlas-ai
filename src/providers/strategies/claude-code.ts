@@ -42,9 +42,19 @@ export const claudeCodeProvider: SyncProvider = {
 
   async verify(): Promise<SyncStatus> {
     if (!this.detected()) {
-      return { provider: 'claude-code', configured: false, healthy: false, details: 'Claude Code not found (~/.claude missing)' }
+      return {
+        provider: 'claude-code',
+        configured: false,
+        healthy: false,
+        details: 'Claude Code not found (~/.claude missing)',
+      }
     }
-    return { provider: 'claude-code', configured: true, healthy: true, details: 'Claude Code detected' }
+    return {
+      provider: 'claude-code',
+      configured: true,
+      healthy: true,
+      details: 'Claude Code detected',
+    }
   },
 
   async cleanup(): Promise<void> {

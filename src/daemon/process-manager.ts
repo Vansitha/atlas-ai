@@ -1,7 +1,20 @@
-import { existsSync, readFileSync, writeFileSync, unlinkSync, openSync, closeSync, realpathSync } from 'node:fs'
+import {
+  existsSync,
+  readFileSync,
+  writeFileSync,
+  unlinkSync,
+  openSync,
+  closeSync,
+  realpathSync,
+} from 'node:fs'
 import { spawn } from 'node:child_process'
 import { dirname, join } from 'node:path'
-import { DAEMON_PID_PATH, DAEMON_HEARTBEAT_PATH, DAEMON_LOG_PATH, findBookmarksPath } from '../storage/paths.js'
+import {
+  DAEMON_PID_PATH,
+  DAEMON_HEARTBEAT_PATH,
+  DAEMON_LOG_PATH,
+  findBookmarksPath,
+} from '../storage/paths.js'
 import { loadConfig } from '../config/loader.js'
 import { DaemonError } from '../utils/errors.js'
 
@@ -46,7 +59,9 @@ export function getDaemonStatus(): DaemonStatus {
   }
 
   if (!isProcessAlive(pid)) {
-    try { unlinkSync(DAEMON_PID_PATH) } catch {}
+    try {
+      unlinkSync(DAEMON_PID_PATH)
+    } catch {}
     return { running: false, pid: null, bookmarkFolder: folder, heartbeatAge: null }
   }
 
@@ -75,13 +90,20 @@ export function stopDaemon(): { ok: boolean; message: string } {
   } catch (err: unknown) {
     const code = (err as NodeJS.ErrnoException).code
     if (code !== 'ESRCH') {
-      return { ok: false, message: `Failed to stop daemon: ${err instanceof Error ? err.message : String(err)}` }
+      return {
+        ok: false,
+        message: `Failed to stop daemon: ${err instanceof Error ? err.message : String(err)}`,
+      }
     }
     // ESRCH = process already gone, treat as success
   }
 
-  try { unlinkSync(DAEMON_PID_PATH) } catch {}
-  try { unlinkSync(DAEMON_HEARTBEAT_PATH) } catch {}
+  try {
+    unlinkSync(DAEMON_PID_PATH)
+  } catch {}
+  try {
+    unlinkSync(DAEMON_HEARTBEAT_PATH)
+  } catch {}
 
   return { ok: true, message: `Daemon stopped (PID ${pid})` }
 }

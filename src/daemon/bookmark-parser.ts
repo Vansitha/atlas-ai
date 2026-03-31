@@ -32,8 +32,9 @@ function findFolder(node: BookmarkNode, folderName: string): BookmarkNode | null
 function extractUrls(folder: BookmarkNode): BookmarkEntry[] {
   if (!folder.children) return []
   return folder.children
-    .filter((node): node is BookmarkNode & { url: string } =>
-      node.type === 'url' && typeof node.url === 'string',
+    .filter(
+      (node): node is BookmarkNode & { url: string } =>
+        node.type === 'url' && typeof node.url === 'string',
     )
     .map((node) => ({ name: node.name, url: node.url }))
 }

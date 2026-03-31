@@ -22,8 +22,7 @@ export const htmlExtractor: ContentExtractor = {
       const response = await fetch(url.toString(), {
         signal: controller.signal,
         headers: {
-          'User-Agent':
-            'Mozilla/5.0 (compatible; Atlas/1.0; +https://github.com/Vansitha/atlas)',
+          'User-Agent': 'Mozilla/5.0 (compatible; Atlas/1.0; +https://github.com/Vansitha/atlas)',
         },
       })
 
@@ -75,17 +74,17 @@ export const htmlExtractor: ContentExtractor = {
     // Extract main content in priority order.
     // Cheerio objects are always truthy so we must check .length, not use ||.
     const contentEl =
-      $('article').first().length > 0 ? $('article').first()
-      : $('main').first().length > 0 ? $('main').first()
-      : $('[role="main"]').first().length > 0 ? $('[role="main"]').first()
-      : $('.content, #content, .post, #post').first().length > 0 ? $('.content, #content, .post, #post').first()
-      : $('body')
+      $('article').first().length > 0
+        ? $('article').first()
+        : $('main').first().length > 0
+          ? $('main').first()
+          : $('[role="main"]').first().length > 0
+            ? $('[role="main"]').first()
+            : $('.content, #content, .post, #post').first().length > 0
+              ? $('.content, #content, .post, #post').first()
+              : $('body')
 
-    const body = contentEl
-      .text()
-      .replace(/\s+/g, ' ')
-      .trim()
-      .slice(0, MAX_BODY_LENGTH)
+    const body = contentEl.text().replace(/\s+/g, ' ').trim().slice(0, MAX_BODY_LENGTH)
 
     const metadata: Record<string, string> = {}
     if (author) metadata['author'] = author

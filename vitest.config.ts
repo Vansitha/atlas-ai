@@ -12,9 +12,9 @@ export default defineConfig({
       exclude: [
         'src/types/**',
         'src/index.ts',
-        'src/ai/transport/**',   // requires external CLIs / API keys
-        'src/storage/paths.ts',  // pure constants
-        'src/utils/logger.ts',   // thin wrapper around console
+        'src/ai/transport/**', // requires external CLIs / API keys
+        'src/storage/paths.ts', // pure constants
+        'src/utils/logger.ts', // thin wrapper around console
         'src/daemon/watcher.ts', // long-running process with chokidar + full pipeline
       ],
       thresholds: {

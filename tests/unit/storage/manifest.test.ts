@@ -18,9 +18,8 @@ vi.mock('../../../src/storage/paths.js', () => ({
   BROWSER_BOOKMARK_PATHS: {},
 }))
 
-const { addEntry, removeEntry, findByUrlHash, findBySlug, search, listEntries } = await import(
-  '../../../src/storage/manifest.js'
-)
+const { addEntry, removeEntry, findByUrlHash, findBySlug, search, listEntries } =
+  await import('../../../src/storage/manifest.js')
 
 const sampleEntry = {
   slug: 'react-hooks-guide',
@@ -72,7 +71,15 @@ describe('manifest', () => {
 
   it('search matches on title', () => {
     addEntry(sampleEntry)
-    addEntry({ ...sampleEntry, slug: 'other', title: 'Vue Guide', urlHash: 'xyz', sourceUrl: 'https://example.com/vue', tags: ['vue'], filePath: 'skills/other/SKILL.md' })
+    addEntry({
+      ...sampleEntry,
+      slug: 'other',
+      title: 'Vue Guide',
+      urlHash: 'xyz',
+      sourceUrl: 'https://example.com/vue',
+      tags: ['vue'],
+      filePath: 'skills/other/SKILL.md',
+    })
     expect(search('react')).toHaveLength(1)
     expect(search('guide')).toHaveLength(2)
   })
@@ -84,7 +91,15 @@ describe('manifest', () => {
 
   it('listEntries filters by type', () => {
     addEntry(sampleEntry)
-    addEntry({ ...sampleEntry, slug: 'event-loop', title: 'Event Loop', type: 'knowledge', urlHash: 'def456', sourceUrl: 'https://example.com/event-loop', filePath: 'knowledge/event-loop.md' })
+    addEntry({
+      ...sampleEntry,
+      slug: 'event-loop',
+      title: 'Event Loop',
+      type: 'knowledge',
+      urlHash: 'def456',
+      sourceUrl: 'https://example.com/event-loop',
+      filePath: 'knowledge/event-loop.md',
+    })
     expect(listEntries('skill')).toHaveLength(1)
     expect(listEntries('knowledge')).toHaveLength(1)
     expect(listEntries()).toHaveLength(2)

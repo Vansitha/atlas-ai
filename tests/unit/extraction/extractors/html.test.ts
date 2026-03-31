@@ -3,18 +3,18 @@ import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { htmlExtractor } from '../../../../src/extraction/extractors/html.js'
 
-const fixtureHtml = readFileSync(
-  join(process.cwd(), 'tests/fixtures/html/article.html'),
-  'utf-8',
-)
+const fixtureHtml = readFileSync(join(process.cwd(), 'tests/fixtures/html/article.html'), 'utf-8')
 
 function mockFetch(html: string, status = 200, contentType = 'text/html') {
-  vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
-    ok: status >= 200 && status < 300,
-    status,
-    headers: { get: () => contentType },
-    text: () => Promise.resolve(html),
-  }))
+  vi.stubGlobal(
+    'fetch',
+    vi.fn().mockResolvedValue({
+      ok: status >= 200 && status < 300,
+      status,
+      headers: { get: () => contentType },
+      text: () => Promise.resolve(html),
+    }),
+  )
 }
 
 beforeEach(() => vi.restoreAllMocks())
@@ -63,7 +63,9 @@ describe('htmlExtractor', () => {
 
   it('throws on non-HTML content type', async () => {
     mockFetch('{}', 200, 'application/json')
-    await expect(htmlExtractor.extract(new URL('https://example.com'))).rejects.toThrow('content type')
+    await expect(htmlExtractor.extract(new URL('https://example.com'))).rejects.toThrow(
+      'content type',
+    )
   })
 
   it('returns fallback content when extracted body is too short', async () => {

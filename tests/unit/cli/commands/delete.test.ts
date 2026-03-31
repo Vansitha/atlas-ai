@@ -57,11 +57,13 @@ beforeEach(() => {
 describe('atlas delete', () => {
   it('calls fail when slug not found', async () => {
     vi.mocked(findBySlug).mockReturnValue(undefined)
-    const exitSpy = vi.spyOn(process, 'exit').mockImplementation(() => { throw new Error('exit') })
+    const exitSpy = vi.spyOn(process, 'exit').mockImplementation(() => {
+      throw new Error('exit')
+    })
 
-    await expect(
-      makeProgram().parseAsync(['node', 'atlas', 'delete', 'missing'])
-    ).rejects.toThrow('exit')
+    await expect(makeProgram().parseAsync(['node', 'atlas', 'delete', 'missing'])).rejects.toThrow(
+      'exit',
+    )
 
     expect(fail).toHaveBeenCalledWith(expect.stringContaining('missing'))
     exitSpy.mockRestore()
@@ -98,7 +100,7 @@ describe('atlas delete', () => {
     vi.mocked(fsExists).mockReturnValue(false)
 
     await expect(
-      makeProgram().parseAsync(['node', 'atlas', 'delete', 'react-hooks', '--force'])
+      makeProgram().parseAsync(['node', 'atlas', 'delete', 'react-hooks', '--force']),
     ).resolves.toBeDefined()
 
     expect(removeEntry).toHaveBeenCalledWith('react-hooks')

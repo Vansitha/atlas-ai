@@ -47,8 +47,8 @@ export function registerUninstallCommand(program: Command): void {
       if (!options.force) {
         const ok = await confirm(
           'This will remove Atlas config, index, and provider integrations.\n' +
-          '  Your skills and knowledge files in ~/.ai-knowledge/ will be kept.\n' +
-          '  Continue?',
+            '  Your skills and knowledge files in ~/.ai-knowledge/ will be kept.\n' +
+            '  Continue?',
         )
         if (!ok) {
           outro('Aborted')
@@ -85,9 +85,9 @@ export function registerUninstallCommand(program: Command): void {
 
       outro(
         'Atlas data removed.\n' +
-        '  Your files remain at ~/.ai-knowledge/skills/ and ~/.ai-knowledge/knowledge/\n\n' +
-        '  To fully remove the CLI:\n' +
-        '  npm uninstall -g atlas-ai',
+          '  Your files remain at ~/.ai-knowledge/skills/ and ~/.ai-knowledge/knowledge/\n\n' +
+          '  To fully remove the CLI:\n' +
+          '  npm uninstall -g atlas-ai',
       )
     })
 }

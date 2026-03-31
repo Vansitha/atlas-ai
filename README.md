@@ -52,11 +52,11 @@ npm install -g atlas-ai
 
 Atlas needs at least one AI provider to classify captures. It will auto-detect from:
 
-| Provider | How to set up |
-|---|---|
-| Claude CLI | `npm install -g @anthropic-ai/claude-code` |
-| OpenCode CLI | `npm install -g opencode-ai` |
-| Anthropic SDK | `export ANTHROPIC_API_KEY=sk-...` |
+| Provider      | How to set up                              |
+| ------------- | ------------------------------------------ |
+| Claude CLI    | `npm install -g @anthropic-ai/claude-code` |
+| OpenCode CLI  | `npm install -g opencode-ai`               |
+| Anthropic SDK | `export ANTHROPIC_API_KEY=sk-...`          |
 
 ## Usage
 
@@ -69,6 +69,7 @@ atlas init
 ```
 
 Walks you through:
+
 1. **Browser** — which bookmark folder to watch (Chrome, Brave, Arc, Edge, or skip)
 2. **Coding tools** — which tools to sync to (auto-detects installed ones)
 3. **AI provider** — which LLM to use for classification
@@ -95,6 +96,7 @@ atlas capture https://example.com --dry-run
 ```
 
 **Supported sources:**
+
 - Twitter / X threads (via fxtwitter — no auth needed)
 - Reddit posts and comment threads
 - Sites with `llms-full.txt` or `llms.txt`
@@ -232,24 +234,27 @@ Atlas generates skills following the [Agent Skills](https://agentskills.io) open
 
 ```markdown
 ---
-title: "React Hooks Overview"
+title: 'React Hooks Overview'
 type: skill
-sourceUrl: "https://react.dev/learn/hooks-overview"
+sourceUrl: 'https://react.dev/learn/hooks-overview'
 urlHash: a1b2c3d4
 capturedAt: 2024-01-15T10:00:00.000Z
-tags: ["react", "hooks", "frontend"]
-description: "Core React hooks with usage patterns and best practices"
+tags: ['react', 'hooks', 'frontend']
+description: 'Core React hooks with usage patterns and best practices'
 ---
 
 # React Hooks Overview
 
 ## Overview
+
 ...
 
 ## Usage
+
 ...
 
 ## Examples
+
 ...
 ```
 
@@ -257,12 +262,12 @@ description: "Core React hooks with usage patterns and best practices"
 
 Atlas syncs entries as individual **symlinks** — it never touches files you already have in your tool directories.
 
-| Tool | Sync location |
-|---|---|
-| Claude Code | `~/.claude/skills/<slug>` and `~/.claude/rules/knowledge/<slug>.md` |
-| Cursor | `~/.cursor/rules/atlas/skills/<slug>` |
-| Windsurf | `~/.codeium/windsurf/memories/atlas/skills/<slug>` |
-| GitHub Copilot | `.github/copilot-instructions.md` (appended with markers) |
+| Tool           | Sync location                                                       |
+| -------------- | ------------------------------------------------------------------- |
+| Claude Code    | `~/.claude/skills/<slug>` and `~/.claude/rules/knowledge/<slug>.md` |
+| Cursor         | `~/.cursor/rules/atlas/skills/<slug>`                               |
+| Windsurf       | `~/.codeium/windsurf/memories/atlas/skills/<slug>`                  |
+| GitHub Copilot | `.github/copilot-instructions.md` (appended with markers)           |
 
 ## Configuration
 

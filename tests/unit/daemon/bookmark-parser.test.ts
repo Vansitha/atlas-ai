@@ -46,7 +46,10 @@ describe('parseBookmarkFolder', () => {
     const entries = parseBookmarkFolder(BOOKMARKS_PATH, FOLDER)
     expect(entries).toHaveLength(2)
     expect(entries[0]).toEqual({ name: 'React Hooks', url: 'https://react.dev/learn' })
-    expect(entries[1]).toEqual({ name: 'MDN Promises', url: 'https://developer.mozilla.org/promises' })
+    expect(entries[1]).toEqual({
+      name: 'MDN Promises',
+      url: 'https://developer.mozilla.org/promises',
+    })
   })
 
   it('finds folder nested inside another folder', () => {
@@ -54,9 +57,7 @@ describe('parseBookmarkFolder', () => {
       makeBookmarks({
         bookmark_bar: folderNode('Bookmarks bar', [
           folderNode('Dev', [
-            folderNode('Atlas', [
-              urlNode('TypeScript Handbook', 'https://typescriptlang.org'),
-            ]),
+            folderNode('Atlas', [urlNode('TypeScript Handbook', 'https://typescriptlang.org')]),
           ]),
         ]),
         other: folderNode('Other', []),
@@ -74,9 +75,7 @@ describe('parseBookmarkFolder', () => {
       makeBookmarks({
         bookmark_bar: folderNode('Bookmarks bar', []),
         other: folderNode('Other', [
-          folderNode('Atlas', [
-            urlNode('Node.js Docs', 'https://nodejs.org'),
-          ]),
+          folderNode('Atlas', [urlNode('Node.js Docs', 'https://nodejs.org')]),
         ]),
         synced: folderNode('Synced', []),
       }) as unknown as Buffer,
@@ -91,9 +90,7 @@ describe('parseBookmarkFolder', () => {
     mockReadFileSync.mockReturnValue(
       makeBookmarks({
         bookmark_bar: folderNode('Bookmarks bar', [
-          folderNode('atlas', [
-            urlNode('Some Page', 'https://example.com'),
-          ]),
+          folderNode('atlas', [urlNode('Some Page', 'https://example.com')]),
         ]),
         other: folderNode('Other', []),
         synced: folderNode('Synced', []),
@@ -149,9 +146,7 @@ describe('parseBookmarkFolder', () => {
         bookmark_bar: folderNode('Bookmarks bar', [
           folderNode('Atlas', [
             urlNode('Direct URL', 'https://direct.com'),
-            folderNode('Subfolder', [
-              urlNode('Nested URL', 'https://nested.com'),
-            ]),
+            folderNode('Subfolder', [urlNode('Nested URL', 'https://nested.com')]),
           ]),
         ]),
         other: folderNode('Other', []),
@@ -168,10 +163,7 @@ describe('parseBookmarkFolder', () => {
     mockReadFileSync.mockReturnValue(
       makeBookmarks({
         bookmark_bar: folderNode('Bookmarks bar', [
-          folderNode('Atlas', [
-            folderNode('SubA', []),
-            folderNode('SubB', []),
-          ]),
+          folderNode('Atlas', [folderNode('SubA', []), folderNode('SubB', [])]),
         ]),
         other: folderNode('Other', []),
         synced: folderNode('Synced', []),

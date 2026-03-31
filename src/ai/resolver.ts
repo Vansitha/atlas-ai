@@ -5,11 +5,7 @@ import { NoAiProviderError } from '../utils/errors.js'
 import { logger } from '../utils/logger.js'
 import type { AITransport } from '../types/index.js'
 
-const TRANSPORTS: AITransport[] = [
-  claudeCliTransport,
-  opencodeCliTransport,
-  anthropicSdkTransport,
-]
+const TRANSPORTS: AITransport[] = [claudeCliTransport, opencodeCliTransport, anthropicSdkTransport]
 
 export async function resolveTransport(): Promise<AITransport> {
   for (const transport of TRANSPORTS) {

@@ -12,10 +12,16 @@ import type { KnowledgeApp } from '../../types/index.js'
 
 // The official Obsidian CLI binary lives inside the app bundle
 const OBSIDIAN_CLI_BUNDLE_PATH = '/Applications/Obsidian.app/Contents/MacOS/obsidian'
-const OBSIDIAN_CLI_BUNDLE_DIR  = '/Applications/Obsidian.app/Contents/MacOS'
+const OBSIDIAN_CLI_BUNDLE_DIR = '/Applications/Obsidian.app/Contents/MacOS'
 
-interface ObsidianVaultEntry { path: string; ts: number; open?: boolean }
-interface ObsidianRegistry   { vaults: Record<string, ObsidianVaultEntry> }
+interface ObsidianVaultEntry {
+  path: string
+  ts: number
+  open?: boolean
+}
+interface ObsidianRegistry {
+  vaults: Record<string, ObsidianVaultEntry>
+}
 
 function obsidianRegistryPath(): string | null {
   if (process.platform === 'darwin') {
@@ -25,7 +31,11 @@ function obsidianRegistryPath(): string | null {
     return join(homedir(), '.config', 'obsidian', 'obsidian.json')
   }
   if (process.platform === 'win32') {
-    return join(process.env.APPDATA ?? join(homedir(), 'AppData', 'Roaming'), 'obsidian', 'obsidian.json')
+    return join(
+      process.env.APPDATA ?? join(homedir(), 'AppData', 'Roaming'),
+      'obsidian',
+      'obsidian.json',
+    )
   }
   return null
 }
@@ -36,8 +46,10 @@ function obsidianCliInPath(): boolean {
 }
 
 function obsidianAppInstalled(): boolean {
-  return existsSync('/Applications/Obsidian.app') ||
+  return (
+    existsSync('/Applications/Obsidian.app') ||
     existsSync(join(homedir(), 'Applications', 'Obsidian.app'))
+  )
 }
 
 function obsidianCliBinaryExists(): boolean {
@@ -46,7 +58,7 @@ function obsidianCliBinaryExists(): boolean {
 
 function detectShellRcFile(): string {
   const shell = process.env.SHELL ?? ''
-  if (shell.includes('zsh'))  return join(homedir(), '.zshrc')
+  if (shell.includes('zsh')) return join(homedir(), '.zshrc')
   if (shell.includes('bash')) return join(homedir(), '.bashrc')
   return join(homedir(), '.profile')
 }
@@ -82,19 +94,17 @@ async function ensureObsidianCli(): Promise<boolean> {
   if (obsidianCliInPath()) return true
 
   if (!obsidianAppInstalled()) {
-    fail(
-      'Obsidian is not installed. Download it from https://obsidian.md and try again.',
-    )
+    fail('Obsidian is not installed. Download it from https://obsidian.md and try again.')
     return false
   }
 
   if (!obsidianCliBinaryExists()) {
     clack.log.warn(
       'Obsidian CLI is not enabled. To enable it:\n' +
-      '  1. Open Obsidian\n' +
-      '  2. Go to Settings → General → Command line interface\n' +
-      '  3. Click Enable\n' +
-      '  4. Re-run `atlas open`',
+        '  1. Open Obsidian\n' +
+        '  2. Go to Settings → General → Command line interface\n' +
+        '  3. Click Enable\n' +
+        '  4. Re-run `atlas open`',
     )
     return false
   }
@@ -104,7 +114,7 @@ async function ensureObsidianCli(): Promise<boolean> {
   addObsidianCliToPath()
   clack.log.success(
     `Added Obsidian CLI to PATH in ${detectShellRcFile()}.\n` +
-    '  Run: source ~/.zshrc   (or open a new terminal)',
+      '  Run: source ~/.zshrc   (or open a new terminal)',
   )
   return true
 }
@@ -161,7 +171,9 @@ export function registerOpenCommand(program: Command): void {
       const app = appOverride ?? config.knowledgeApp
 
       if (!app) {
-        fail('No knowledge app configured. Run `atlas init` to set one, or use --app vscode|cursor|obsidian')
+        fail(
+          'No knowledge app configured. Run `atlas init` to set one, or use --app vscode|cursor|obsidian',
+        )
         process.exit(1)
       }
 
@@ -184,7 +196,7 @@ export function registerOpenCommand(program: Command): void {
       } catch (err) {
         fail(
           `Could not open ${app}. Make sure it is installed and available in your PATH.\n` +
-          `  ${err instanceof Error ? err.message : String(err)}`,
+            `  ${err instanceof Error ? err.message : String(err)}`,
         )
         process.exit(1)
       }

@@ -45,8 +45,8 @@ afterEach(() => {
 
 describe('detectBrowsers', () => {
   it('returns browsers whose bookmark files exist', () => {
-    vi.mocked(existsSync).mockImplementation((p) =>
-      String(p).includes('Chrome') || String(p).includes('Arc'),
+    vi.mocked(existsSync).mockImplementation(
+      (p) => String(p).includes('Chrome') || String(p).includes('Arc'),
     )
     const result = detectBrowsers()
     expect(result).toContain('chrome')
@@ -106,14 +106,18 @@ describe('detectAiProviders', () => {
   })
 
   it('detects anthropic-sdk when ANTHROPIC_API_KEY is set', () => {
-    vi.mocked(execSync).mockImplementation(() => { throw new Error('not found') })
+    vi.mocked(execSync).mockImplementation(() => {
+      throw new Error('not found')
+    })
     process.env.ANTHROPIC_API_KEY = 'sk-test-key'
     const result = detectAiProviders()
     expect(result.map((r) => r.value)).toContain('anthropic-sdk')
   })
 
   it('always includes anthropic-sdk even when nothing else is available', () => {
-    vi.mocked(execSync).mockImplementation(() => { throw new Error('not found') })
+    vi.mocked(execSync).mockImplementation(() => {
+      throw new Error('not found')
+    })
     const result = detectAiProviders()
     expect(result).toHaveLength(1)
     expect(result[0].value).toBe('anthropic-sdk')

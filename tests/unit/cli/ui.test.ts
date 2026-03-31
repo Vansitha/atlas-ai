@@ -83,7 +83,9 @@ describe('withSpinner', () => {
 
   it('re-throws errors from the async function', async () => {
     await expect(
-      withSpinner('working...', async () => { throw new Error('boom') })
+      withSpinner('working...', async () => {
+        throw new Error('boom')
+      }),
     ).rejects.toThrow('boom')
   })
 

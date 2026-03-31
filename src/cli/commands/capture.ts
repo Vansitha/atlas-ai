@@ -74,9 +74,8 @@ export function registerCaptureCommand(program: Command): void {
 
       let classification
       try {
-        classification = await withSpinner(
-          'Classifying content...',
-          () => classify(transport, content, forceType),
+        classification = await withSpinner('Classifying content...', () =>
+          classify(transport, content, forceType),
         )
       } catch (err) {
         fail(err instanceof Error ? err.message : 'Classification failed')
@@ -85,9 +84,8 @@ export function registerCaptureCommand(program: Command): void {
 
       let generation
       try {
-        generation = await withSpinner(
-          'Generating markdown...',
-          () => generate(transport, content, classification),
+        generation = await withSpinner('Generating markdown...', () =>
+          generate(transport, content, classification),
         )
       } catch (err) {
         fail(err instanceof Error ? err.message : 'Generation failed')
@@ -95,12 +93,16 @@ export function registerCaptureCommand(program: Command): void {
       }
 
       const userTags = options.tags
-        ? options.tags.split(',').map((t: string) => t.trim()).filter(Boolean)
+        ? options.tags
+            .split(',')
+            .map((t: string) => t.trim())
+            .filter(Boolean)
         : []
 
-      const mergedGeneration = userTags.length > 0
-        ? { ...generation, tags: [...new Set([...generation.tags, ...userTags])] }
-        : generation
+      const mergedGeneration =
+        userTags.length > 0
+          ? { ...generation, tags: [...new Set([...generation.tags, ...userTags])] }
+          : generation
 
       const writeResult = writeEntry(url, mergedGeneration, classification, options.name)
       addEntry({ ...writeResult.entry, tags: [...writeResult.entry.tags] })
@@ -112,9 +114,13 @@ export function registerCaptureCommand(program: Command): void {
         // Sync failure is non-fatal — entry is already saved
       }
 
-      const providerLine = syncResults.length > 0
-        ? ` (synced to ${syncResults.filter((r) => r.entriesSynced > 0).map((r) => r.provider).join(', ')})`
-        : ''
+      const providerLine =
+        syncResults.length > 0
+          ? ` (synced to ${syncResults
+              .filter((r) => r.entriesSynced > 0)
+              .map((r) => r.provider)
+              .join(', ')})`
+          : ''
 
       outro(
         `Captured "${writeResult.entry.title}" as ${classification.type} (${writeResult.slug})${providerLine}`,

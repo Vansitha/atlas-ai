@@ -19,10 +19,7 @@ import { registerOpenCommand } from '../src/cli/commands/open.js'
 
 const program = new Command()
 
-program
-  .name('atlas')
-  .description('Turn any URL or bookmark into AI knowledge')
-  .version(pkg.version)
+program.name('atlas').description('Turn any URL or bookmark into AI knowledge').version(pkg.version)
 
 registerCaptureCommand(program)
 registerListCommand(program)

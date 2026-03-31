@@ -3,9 +3,7 @@ import { syncAll, verifyAll } from '../../providers/registry.js'
 import { withSpinner, fail, outro } from '../ui.js'
 
 export function registerProvidersCommand(program: Command): void {
-  const providers = program
-    .command('providers')
-    .description('Manage AI tool provider integrations')
+  const providers = program.command('providers').description('Manage AI tool provider integrations')
 
   providers
     .command('status')

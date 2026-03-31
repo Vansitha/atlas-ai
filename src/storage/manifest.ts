@@ -47,9 +47,7 @@ export function findByUrlHash(urlHash: string): ManifestEntry | undefined {
 }
 
 export function findBySlug(slug: string): ManifestEntry | undefined {
-  return loadManifest().entries.find(
-    (e) => e.slug === slug || e.slug.startsWith(slug),
-  )
+  return loadManifest().entries.find((e) => e.slug === slug || e.slug.startsWith(slug))
 }
 
 export function search(query: string): ManifestEntry[] {

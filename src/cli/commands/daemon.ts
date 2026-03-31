@@ -13,9 +13,7 @@ function formatHeartbeatAge(seconds: number | null): string {
 }
 
 export function registerDaemonCommand(program: Command): void {
-  const daemon = program
-    .command('daemon')
-    .description('Manage the bookmark watcher daemon')
+  const daemon = program.command('daemon').description('Manage the bookmark watcher daemon')
 
   daemon
     .command('start')
@@ -26,8 +24,8 @@ export function registerDaemonCommand(program: Command): void {
         const result = startDaemon()
         outro(
           `Daemon started (PID ${result.pid})\n` +
-          `  Watching "${result.bookmarkFolder}" bookmark folder\n` +
-          `  Log: ~/.ai-knowledge/.daemon.log`,
+            `  Watching "${result.bookmarkFolder}" bookmark folder\n` +
+            `  Log: ~/.ai-knowledge/.daemon.log`,
         )
       } catch (err) {
         fail(err instanceof Error ? err.message : 'Failed to start daemon')
@@ -111,7 +109,9 @@ export function registerDaemonCommand(program: Command): void {
       try {
         await startWatcher()
       } catch (err) {
-        console.error(`[atlas-daemon] Fatal error: ${err instanceof Error ? err.message : String(err)}`)
+        console.error(
+          `[atlas-daemon] Fatal error: ${err instanceof Error ? err.message : String(err)}`,
+        )
         process.exit(1)
       }
     })

@@ -35,20 +35,21 @@ export const redditExtractor: ContentExtractor = {
   priority: 100,
 
   canHandle(url: URL): boolean {
-    return url.hostname === 'www.reddit.com' || url.hostname === 'reddit.com' || url.hostname === 'old.reddit.com'
+    return (
+      url.hostname === 'www.reddit.com' ||
+      url.hostname === 'reddit.com' ||
+      url.hostname === 'old.reddit.com'
+    )
   },
 
   async extract(url: URL): Promise<ExtractedContent> {
     if (!REDDIT_PATTERN.test(url.toString())) {
-      throw new ExtractionError(
-        'URL does not look like a Reddit post',
-        url.toString(),
-        'reddit',
-      )
+      throw new ExtractionError('URL does not look like a Reddit post', url.toString(), 'reddit')
     }
 
     // Normalize to www.reddit.com and append .json
-    const normalized = url.toString()
+    const normalized = url
+      .toString()
       .replace('old.reddit.com', 'www.reddit.com')
       .replace(/\?.*$/, '')
       .replace(/\/$/, '')
@@ -61,11 +62,7 @@ export const redditExtractor: ContentExtractor = {
     })
 
     if (!response.ok) {
-      throw new ExtractionError(
-        `Reddit returned ${response.status}`,
-        url.toString(),
-        'reddit',
-      )
+      throw new ExtractionError(`Reddit returned ${response.status}`, url.toString(), 'reddit')
     }
 
     const data = (await response.json()) as RedditListing[]

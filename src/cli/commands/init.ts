@@ -4,12 +4,29 @@ import { join } from 'node:path'
 import * as clack from '@clack/prompts'
 import type { Command } from 'commander'
 import { loadConfig, updateConfig } from '../../config/loader.js'
-import { ATLAS_HOME, CONFIG_PATH, listBrowserProfiles, findBookmarksPath, ensureBookmarkFolder } from '../../storage/paths.js'
-import { detectBrowsers, detectCodingTools, detectAiProviders, detectKnowledgeApps } from '../detect.js'
+import {
+  ATLAS_HOME,
+  CONFIG_PATH,
+  listBrowserProfiles,
+  findBookmarksPath,
+  ensureBookmarkFolder,
+} from '../../storage/paths.js'
+import {
+  detectBrowsers,
+  detectCodingTools,
+  detectAiProviders,
+  detectKnowledgeApps,
+} from '../detect.js'
 import { syncAll } from '../../providers/registry.js'
 import { startDaemon } from '../../daemon/process-manager.js'
 import { intro, outro, fail } from '../ui.js'
-import type { BrowserChoice, AiProviderType, CodingTool, KnowledgeApp, AtlasConfig } from '../../types/index.js'
+import type {
+  BrowserChoice,
+  AiProviderType,
+  CodingTool,
+  KnowledgeApp,
+  AtlasConfig,
+} from '../../types/index.js'
 
 const COMPLETION_LINE = 'eval "$(atlas completion)"  # atlas shell completion'
 const COMPLETION_MARKER = '# atlas shell completion'
@@ -39,7 +56,9 @@ export function removeShellCompletion(): boolean {
   if (!rcFile || !existsSync(rcFile)) return false
   try {
     const lines = readFileSync(rcFile, 'utf-8').split('\n')
-    const filtered = lines.filter((l) => !l.includes(COMPLETION_MARKER) && !l.includes('atlas completion'))
+    const filtered = lines.filter(
+      (l) => !l.includes(COMPLETION_MARKER) && !l.includes('atlas completion'),
+    )
     const cleaned = filtered.join('\n').replace(/\n{3,}/g, '\n\n')
     writeFileSync(rcFile, cleaned, 'utf-8')
     return true
@@ -86,7 +105,12 @@ export async function runInitWizard(): Promise<void> {
   // Step 1: Browser
   const detectedBrowsers = detectBrowsers()
 
-  const BROWSER_LABELS: Record<string, string> = { chrome: 'Chrome', brave: 'Brave', arc: 'Arc', edge: 'Edge' }
+  const BROWSER_LABELS: Record<string, string> = {
+    chrome: 'Chrome',
+    brave: 'Brave',
+    arc: 'Arc',
+    edge: 'Edge',
+  }
   const browserOptions: { value: BrowserChoice; label: string; hint?: string }[] = [
     ...detectedBrowsers.map((b) => ({ value: b, label: BROWSER_LABELS[b] ?? b, hint: 'detected' })),
     { value: 'skip', label: 'Skip (manual capture only)' },
@@ -152,7 +176,9 @@ export async function runInitWizard(): Promise<void> {
     if (bookmarksPath) {
       const result = ensureBookmarkFolder(bookmarksPath, bookmarkFolder)
       if (result === 'created') {
-        clack.log.success(`Created "${bookmarkFolder}" bookmark folder in your browser's bookmark bar.`)
+        clack.log.success(
+          `Created "${bookmarkFolder}" bookmark folder in your browser's bookmark bar.`,
+        )
       } else if (result === 'exists') {
         clack.log.info(`"${bookmarkFolder}" bookmark folder already exists.`)
       } else {
@@ -168,16 +194,18 @@ export async function runInitWizard(): Promise<void> {
 
   const TOOL_LABELS: Record<string, string> = {
     'claude-code': 'Claude Code',
-    'cursor': 'Cursor',
-    'copilot': 'GitHub Copilot',
-    'windsurf': 'Windsurf',
-    'opencode': 'OpenCode',
+    cursor: 'Cursor',
+    copilot: 'GitHub Copilot',
+    windsurf: 'Windsurf',
+    opencode: 'OpenCode',
   }
-  const toolOptions: { value: CodingTool; label: string; hint: string }[] = detectedTools.map((t) => ({
-    value: t,
-    label: TOOL_LABELS[t] ?? t,
-    hint: 'detected',
-  }))
+  const toolOptions: { value: CodingTool; label: string; hint: string }[] = detectedTools.map(
+    (t) => ({
+      value: t,
+      label: TOOL_LABELS[t] ?? t,
+      hint: 'detected',
+    }),
+  )
 
   const toolChoices = await clack.multiselect<CodingTool>({
     message: 'Which coding tools should Atlas sync to?',
@@ -197,7 +225,11 @@ export async function runInitWizard(): Promise<void> {
     const spin = clack.spinner()
     spin.start('Running initial sync...')
     try {
-      updateConfig({ browser: browserChoice as BrowserChoice, browserProfile, codingTools: selectedTools })
+      updateConfig({
+        browser: browserChoice as BrowserChoice,
+        browserProfile,
+        codingTools: selectedTools,
+      })
       await syncAll()
       spin.stop('Initial sync complete.')
     } catch {
@@ -223,7 +255,9 @@ export async function runInitWizard(): Promise<void> {
     {
       value: 'anthropic-sdk',
       label: 'Anthropic SDK',
-      hint: detectedValues.includes('anthropic-sdk') ? 'ANTHROPIC_API_KEY set' : 'set ANTHROPIC_API_KEY',
+      hint: detectedValues.includes('anthropic-sdk')
+        ? 'ANTHROPIC_API_KEY set'
+        : 'set ANTHROPIC_API_KEY',
     },
     { value: 'skip', label: 'Skip (use --as flag for manual classification)' },
   ]
@@ -245,9 +279,17 @@ export async function runInitWizard(): Promise<void> {
   // Step 4: Knowledge app
   const detectedKnowledgeApps = detectKnowledgeApps()
 
-  const KNOWLEDGE_APP_LABELS: Record<string, string> = { vscode: 'VS Code', cursor: 'Cursor', obsidian: 'Obsidian' }
+  const KNOWLEDGE_APP_LABELS: Record<string, string> = {
+    vscode: 'VS Code',
+    cursor: 'Cursor',
+    obsidian: 'Obsidian',
+  }
   const knowledgeAppOptions: { value: KnowledgeApp | 'skip'; label: string; hint?: string }[] = [
-    ...detectedKnowledgeApps.map((a) => ({ value: a, label: KNOWLEDGE_APP_LABELS[a] ?? a, hint: 'detected' })),
+    ...detectedKnowledgeApps.map((a) => ({
+      value: a,
+      label: KNOWLEDGE_APP_LABELS[a] ?? a,
+      hint: 'detected',
+    })),
     { value: 'skip', label: 'Skip' },
   ]
 
@@ -310,7 +352,9 @@ export async function runInitWizard(): Promise<void> {
     spin.start('Starting bookmark watcher...')
     try {
       const { pid } = startDaemon()
-      spin.stop(`Bookmark watcher started (PID ${pid}). Atlas will capture bookmarks added to "${bookmarkFolder}" automatically.`)
+      spin.stop(
+        `Bookmark watcher started (PID ${pid}). Atlas will capture bookmarks added to "${bookmarkFolder}" automatically.`,
+      )
     } catch (err) {
       spin.stop('Could not start bookmark watcher automatically.')
       clack.log.warn(
@@ -322,10 +366,10 @@ export async function runInitWizard(): Promise<void> {
   const openLine = knowledgeApp ? '  atlas open                Open knowledge files\n' : ''
   outro(
     'Setup complete! Try these commands:\n' +
-    '  atlas capture <url>       Capture a URL\n' +
-    '  atlas list                See all entries\n' +
-    `${openLine}` +
-    '  atlas providers status    Check sync status',
+      '  atlas capture <url>       Capture a URL\n' +
+      '  atlas list                See all entries\n' +
+      `${openLine}` +
+      '  atlas providers status    Check sync status',
   )
 }
 

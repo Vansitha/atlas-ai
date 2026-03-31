@@ -8,11 +8,14 @@ const twitterFixture = JSON.parse(
 )
 
 function mockFetch(data: unknown, status = 200) {
-  vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
-    ok: status >= 200 && status < 300,
-    status,
-    json: () => Promise.resolve(data),
-  }))
+  vi.stubGlobal(
+    'fetch',
+    vi.fn().mockResolvedValue({
+      ok: status >= 200 && status < 300,
+      status,
+      json: () => Promise.resolve(data),
+    }),
+  )
 }
 
 beforeEach(() => vi.restoreAllMocks())
@@ -65,8 +68,8 @@ describe('twitterExtractor', () => {
   })
 
   it('throws when tweet ID cannot be parsed', async () => {
-    await expect(
-      twitterExtractor.extract(new URL('https://twitter.com/user')),
-    ).rejects.toThrow('tweet ID')
+    await expect(twitterExtractor.extract(new URL('https://twitter.com/user'))).rejects.toThrow(
+      'tweet ID',
+    )
   })
 })

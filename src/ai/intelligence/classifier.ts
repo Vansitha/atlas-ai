@@ -63,9 +63,7 @@ export async function classify(
     } catch (err) {
       if (attempt === 2) {
         const message = err instanceof Error ? err.message : String(err)
-        throw new ClassificationError(
-          `Classification failed after 2 attempts: ${message}`,
-        )
+        throw new ClassificationError(`Classification failed after 2 attempts: ${message}`)
       }
       logger.debug(`Classification attempt ${attempt} failed, retrying...`)
     }

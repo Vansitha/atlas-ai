@@ -60,11 +60,7 @@ export const twitterExtractor: ContentExtractor = {
     const data = (await response.json()) as FxTwitterResponse
 
     if (data.code !== 200 || !data.tweet) {
-      throw new ExtractionError(
-        `fxtwitter API error: ${data.message}`,
-        url.toString(),
-        'twitter',
-      )
+      throw new ExtractionError(`fxtwitter API error: ${data.message}`, url.toString(), 'twitter')
     }
 
     const tweet = data.tweet

@@ -57,11 +57,13 @@ describe('atlas show', () => {
 
   it('calls fail when slug not found', async () => {
     vi.mocked(findBySlug).mockReturnValue(undefined)
-    const exitSpy = vi.spyOn(process, 'exit').mockImplementation(() => { throw new Error('exit') })
+    const exitSpy = vi.spyOn(process, 'exit').mockImplementation(() => {
+      throw new Error('exit')
+    })
 
-    await expect(
-      makeProgram().parseAsync(['node', 'atlas', 'show', 'missing'])
-    ).rejects.toThrow('exit')
+    await expect(makeProgram().parseAsync(['node', 'atlas', 'show', 'missing'])).rejects.toThrow(
+      'exit',
+    )
 
     expect(fail).toHaveBeenCalledWith(expect.stringContaining('missing'))
     exitSpy.mockRestore()
@@ -70,10 +72,12 @@ describe('atlas show', () => {
   it('calls fail when file missing on disk', async () => {
     vi.mocked(findBySlug).mockReturnValue(mockEntry)
     vi.mocked(entryExists).mockReturnValue(false)
-    const exitSpy = vi.spyOn(process, 'exit').mockImplementation(() => { throw new Error('exit') })
+    const exitSpy = vi.spyOn(process, 'exit').mockImplementation(() => {
+      throw new Error('exit')
+    })
 
     await expect(
-      makeProgram().parseAsync(['node', 'atlas', 'show', 'react-hooks'])
+      makeProgram().parseAsync(['node', 'atlas', 'show', 'react-hooks']),
     ).rejects.toThrow('exit')
 
     expect(fail).toHaveBeenCalledWith(expect.stringContaining('missing'))

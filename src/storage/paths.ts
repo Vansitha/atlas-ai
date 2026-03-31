@@ -144,9 +144,30 @@ function makeEmptyBookmarksFile(): ChromeBookmarksFile {
   return {
     checksum: '',
     roots: {
-      bookmark_bar: { id: '1', name: 'Bookmarks bar', type: 'folder', children: [], date_added: ts, date_modified: '0' },
-      other:        { id: '2', name: 'Other bookmarks', type: 'folder', children: [], date_added: ts, date_modified: '0' },
-      synced:       { id: '3', name: 'Mobile bookmarks', type: 'folder', children: [], date_added: ts, date_modified: '0' },
+      bookmark_bar: {
+        id: '1',
+        name: 'Bookmarks bar',
+        type: 'folder',
+        children: [],
+        date_added: ts,
+        date_modified: '0',
+      },
+      other: {
+        id: '2',
+        name: 'Other bookmarks',
+        type: 'folder',
+        children: [],
+        date_added: ts,
+        date_modified: '0',
+      },
+      synced: {
+        id: '3',
+        name: 'Mobile bookmarks',
+        type: 'folder',
+        children: [],
+        date_added: ts,
+        date_modified: '0',
+      },
     },
     version: 1,
   }
@@ -159,7 +180,10 @@ function makeEmptyBookmarksFile(): ChromeBookmarksFile {
  * or 'no-file' if the bookmarks file could not be written.
  * Chrome will recalculate the checksum on its next write.
  */
-export function ensureBookmarkFolder(bookmarksPath: string, folderName: string): EnsureBookmarkFolderResult {
+export function ensureBookmarkFolder(
+  bookmarksPath: string,
+  folderName: string,
+): EnsureBookmarkFolderResult {
   let data: ChromeBookmarksFile
 
   const fileExists = existsSync(bookmarksPath)

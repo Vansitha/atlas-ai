@@ -10,9 +10,9 @@ const ALL_BROWSERS: BrowserChoice[] = ['chrome', 'brave', 'arc', 'edge']
 
 const MAC_BROWSER_APPS: Record<string, string[]> = {
   chrome: ['/Applications/Google Chrome.app', join(homedir(), 'Applications', 'Google Chrome.app')],
-  brave:  ['/Applications/Brave Browser.app', join(homedir(), 'Applications', 'Brave Browser.app')],
-  arc:    ['/Applications/Arc.app',            join(homedir(), 'Applications', 'Arc.app')],
-  edge:   ['/Applications/Microsoft Edge.app', join(homedir(), 'Applications', 'Microsoft Edge.app')],
+  brave: ['/Applications/Brave Browser.app', join(homedir(), 'Applications', 'Brave Browser.app')],
+  arc: ['/Applications/Arc.app', join(homedir(), 'Applications', 'Arc.app')],
+  edge: ['/Applications/Microsoft Edge.app', join(homedir(), 'Applications', 'Microsoft Edge.app')],
 }
 
 function browserAppInstalled(browser: string): boolean {

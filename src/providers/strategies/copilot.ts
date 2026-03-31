@@ -90,15 +90,23 @@ export const copilotProvider: SyncProvider = {
 
   async verify(): Promise<SyncStatus> {
     if (!this.detected()) {
-      return { provider: 'copilot', configured: false, healthy: false, details: 'No .github/ directory found in current project' }
+      return {
+        provider: 'copilot',
+        configured: false,
+        healthy: false,
+        details: 'No .github/ directory found in current project',
+      }
     }
-    const hasSection = existsSync(COPILOT_INSTRUCTIONS_PATH) &&
+    const hasSection =
+      existsSync(COPILOT_INSTRUCTIONS_PATH) &&
       readFileSync(COPILOT_INSTRUCTIONS_PATH, 'utf-8').includes(ATLAS_START)
     return {
       provider: 'copilot',
       configured: hasSection,
       healthy: hasSection,
-      details: hasSection ? 'Atlas section present in copilot-instructions.md' : 'Atlas section not yet written',
+      details: hasSection
+        ? 'Atlas section present in copilot-instructions.md'
+        : 'Atlas section not yet written',
     }
   },
 
@@ -108,9 +116,7 @@ export const copilotProvider: SyncProvider = {
     const startIdx = content.indexOf(ATLAS_START)
     const endIdx = content.indexOf(ATLAS_END)
     if (startIdx !== -1 && endIdx !== -1) {
-      const cleaned = (
-        content.slice(0, startIdx) + content.slice(endIdx + ATLAS_END.length)
-      ).trim()
+      const cleaned = (content.slice(0, startIdx) + content.slice(endIdx + ATLAS_END.length)).trim()
       writeFileSync(COPILOT_INSTRUCTIONS_PATH, cleaned + '\n', 'utf-8')
     }
   },
