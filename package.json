@@ -1,6 +1,6 @@
 {
   "name": "atlas-ai",
-  "version": "0.1.0-alpha.0",
+  "version": "0.1.0-alpha.1",
   "description": "Turn any URL or bookmark into AI knowledge. Captures, classifies, and syncs skills and notes to your coding tools automatically.",
   "type": "module",
   "license": "MIT",
