@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/atlas-logo.png" alt="Atlas" />
+  <img src="assets/atlas-logo.png" alt="Atlas AI" />
 </p>
 
 <p align="center">
@@ -8,29 +8,30 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/atlas-ai"><img src="https://img.shields.io/npm/v/atlas-ai?color=blue&label=npm" alt="npm version" /></a>
-  <a href="https://nodejs.org"><img src="https://img.shields.io/badge/node-%3E%3D18-green" alt="Node.js" /></a>
+  <a href="https://nodejs.org"><img src="https://img.shields.io/badge/node-%3E%3D20-green" alt="Node.js" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="License" /></a>
 </p>
 
 ---
 
-Atlas captures URLs — blog posts, docs, Reddit threads, Twitter/X threads — classifies them as **skills** or **knowledge notes** using AI, and symlinks them directly into your coding tools (Claude Code, Cursor, Copilot, Windsurf) so they're always available in context.
+Atlas AI captures URLs — blog posts, docs, Reddit threads, Twitter/X threads — classifies them as **skills** or **knowledge notes** using AI, and syncs them directly into your coding tools (Claude Code, Cursor, Copilot, Windsurf, OpenCode) so they're always available in context.
 
 ## Features
 
 - **One command capture** — `atlas capture <url>` does everything: fetch, classify, generate, sync
-- **Multi-tool sync** — Claude Code, Cursor, GitHub Copilot, Windsurf supported out of the box
+- **Multi-tool sync** — Claude Code, Cursor, GitHub Copilot, Windsurf, OpenCode supported out of the box
 - **Smart extraction** — Twitter threads, Reddit posts, `llms.txt`, `llms-full.txt`, and general HTML
 - **AI classification** — auto-detects skill vs knowledge; override with `--as skill|knowledge`
 - **Zero lock-in** — entries stored as plain markdown in `~/.ai-knowledge`; symlinked, never copied
 - **Pluggable AI** — uses Claude CLI → OpenCode CLI → Anthropic SDK, whichever you have
 - **Offline-friendly** — 24h content cache, `--dry-run` preview, manual `--as` flag
+- **Knowledge viewer** — open your vault in VS Code, Cursor, or Obsidian with `atlas open`
 
 ## Quick Start
 
 ```bash
 # Install
-npm install -g atlas-ai
+npm install -g atlas-ai@alpha
 
 # Run the setup wizard
 atlas init
@@ -44,10 +45,10 @@ atlas list
 
 ## Installation
 
-**Requirements:** Node.js 18+
+**Requirements:** Node.js 20+
 
 ```bash
-npm install -g atlas-ai
+npm install -g atlas-ai@alpha
 ```
 
 Atlas needs at least one AI provider to classify captures. It will auto-detect from:
@@ -73,6 +74,7 @@ Walks you through:
 1. **Browser** — which bookmark folder to watch (Chrome, Brave, Arc, Edge, or skip)
 2. **Coding tools** — which tools to sync to (auto-detects installed ones)
 3. **AI provider** — which LLM to use for classification
+4. **Knowledge app** — which app to open your vault in (VS Code, Cursor, or Obsidian)
 
 ### `atlas capture <url>`
 
@@ -101,6 +103,19 @@ atlas capture https://example.com --dry-run
 - Reddit posts and comment threads
 - Sites with `llms-full.txt` or `llms.txt`
 - Any web page (HTML fallback via cheerio)
+
+### `atlas open`
+
+Open your knowledge vault in the configured app.
+
+```bash
+atlas open
+
+# Override the app
+atlas open --app vscode
+atlas open --app cursor
+atlas open --app obsidian
+```
 
 ### `atlas list`
 
@@ -268,6 +283,7 @@ Atlas syncs entries as individual **symlinks** — it never touches files you al
 | Cursor         | `~/.cursor/rules/atlas/skills/<slug>`                               |
 | Windsurf       | `~/.codeium/windsurf/memories/atlas/skills/<slug>`                  |
 | GitHub Copilot | `.github/copilot-instructions.md` (appended with markers)           |
+| OpenCode       | `~/.opencode/rules/atlas/`                                          |
 
 ## Configuration
 
@@ -279,6 +295,7 @@ Config is stored at `~/.ai-knowledge/config.json`. Edit it directly or re-run `a
   "browser": "arc",
   "codingTools": ["claude-code", "cursor"],
   "aiProvider": "claude-cli",
+  "knowledgeApp": "obsidian",
   "daemon": {
     "enabled": false,
     "bookmarkFolder": "Atlas",
@@ -290,8 +307,8 @@ Config is stored at `~/.ai-knowledge/config.json`. Edit it directly or re-run `a
 ## Development
 
 ```bash
-git clone https://github.com/Vansitha/atlas.git
-cd atlas
+git clone https://github.com/Vansitha/atlas-ai.git
+cd atlas-ai
 npm install
 
 # Build
@@ -305,20 +322,12 @@ npm run test:coverage
 
 # Watch mode
 npm run dev
+
+# Format
+npm run format
 ```
 
 **Tech stack:** TypeScript · ESM · Commander.js · @clack/prompts · Zod · cheerio · Vitest
-
-## Roadmap
-
-- [x] Phase 1 — Project scaffold and core infrastructure
-- [x] Phase 2 — Content extraction pipeline (Twitter, Reddit, llms.txt, HTML)
-- [x] Phase 3 — AI classification and markdown generation
-- [x] Phase 4 — Provider sync (Claude Code, Cursor, Copilot, Windsurf)
-- [x] Phase 5 — CLI commands
-- [x] Phase 6 — Onboarding wizard (`atlas init`)
-- [x] Phase 7 — Polish and npm publish
-- [x] Phase 8 — Daemon / bookmark watcher
 
 ## License
 
