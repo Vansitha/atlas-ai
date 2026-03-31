@@ -5,13 +5,13 @@
   "type": "module",
   "license": "MIT",
   "author": "Vansitha Induja",
-  "homepage": "https://github.com/Vansitha/atlas#readme",
+  "homepage": "https://github.com/Vansitha/atlas-ai#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Vansitha/atlas.git"
+    "url": "https://github.com/Vansitha/atlas-ai.git"
   },
   "bugs": {
-    "url": "https://github.com/Vansitha/atlas/issues"
+    "url": "https://github.com/Vansitha/atlas-ai/issues"
   },
   "keywords": [
     "ai",
